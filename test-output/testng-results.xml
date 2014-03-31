@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="4" passed="4">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="618" started-at="2014-03-31T02:09:13Z" finished-at="2014-03-31T02:09:14Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="618" started-at="2014-03-31T02:09:13Z" finished-at="2014-03-31T02:09:14Z">
+      <class name="org.kits.trax.util.JsonUtilTest">
+        <test-method status="PASS" signature="fromJson()[pri:0, instance:org.kits.trax.util.JsonUtilTest@4bda5048]" name="fromJson" duration-ms="568" started-at="2014-03-30T22:09:13Z" finished-at="2014-03-30T22:09:14Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- fromJson -->
+        <test-method status="PASS" signature="fromJsonArray()[pri:0, instance:org.kits.trax.util.JsonUtilTest@4bda5048]" name="fromJsonArray" duration-ms="3" started-at="2014-03-30T22:09:14Z" finished-at="2014-03-30T22:09:14Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- fromJsonArray -->
+        <test-method status="PASS" signature="toJson()[pri:0, instance:org.kits.trax.util.JsonUtilTest@4bda5048]" name="toJson" duration-ms="2" started-at="2014-03-30T22:09:14Z" finished-at="2014-03-30T22:09:14Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toJson -->
+        <test-method status="PASS" signature="toJsonArray()[pri:0, instance:org.kits.trax.util.JsonUtilTest@4bda5048]" name="toJsonArray" duration-ms="2" started-at="2014-03-30T22:09:14Z" finished-at="2014-03-30T22:09:14Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toJsonArray -->
+      </class> <!-- org.kits.trax.util.JsonUtilTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
