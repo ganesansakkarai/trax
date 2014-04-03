@@ -80,9 +80,10 @@ public class CoverageController {
 
 		List<Coverage> result = coverageService.findAllCoverages();
 		Map info = new HashMap();
-		info.put("Result", "OK");
-		info.put("Records", result);
-		info.put("TotalRecordCount", result.size());
+		info.put("sEcho", 1);
+		info.put("iTotalRecords", result.size());
+		info.put("iTotalDisplayRecords", result.size());
+		info.put("aaData", result);
 		String jsonData = JsonUtil.toJson(info);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 
