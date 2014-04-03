@@ -5,7 +5,7 @@
     <classes>
       <class name="org.kits.trax.rest.CoverageControllerIT">
         <methods>
-          <include name="list"/>
+          <include name="list" invocation-numbers="0"/>
         </methods>
       </class> <!-- org.kits.trax.rest.CoverageControllerIT -->
     </classes>
