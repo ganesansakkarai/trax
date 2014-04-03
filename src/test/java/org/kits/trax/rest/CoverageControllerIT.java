@@ -24,12 +24,12 @@ import org.testng.annotations.Test;
 public class CoverageControllerIT {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CoverageControllerIT.class);
-	private static final String url = "http://localhost:8080/";
+	private static final String url = "http://traxtest.herokuapp.com/";
 	
-	@AfterMethod
-	public void clean() {
-		HttpUtil.post(url + "/coverages/delete/");
-	}
+//	@AfterMethod
+//	public void clean() {
+//		HttpUtil.post(url + "/coverages/delete/");
+//	}
 
 	@DataProvider(name = "bulkCreateData")
 	public static Object[][] bulkCreateData() {

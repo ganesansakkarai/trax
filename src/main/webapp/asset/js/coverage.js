@@ -4,6 +4,6 @@ $(document).ready(function() {
         "sPaginationType": "full_numbers",
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": "http://traxtest.herokuapp.com/coverages"
+        "sAjaxSource": "http://traxtest.herokuapp.com/coverages/"
     });
 } );
