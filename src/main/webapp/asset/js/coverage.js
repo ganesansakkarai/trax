@@ -5,6 +5,14 @@ $(document).ready(function() {
         "bProcessing": true,
         "bServerSide": true,
         "sAjaxSource": "http://traxtest.herokuapp.com/coverages/",
-        "sServerMethod": "POST"
+        "sServerMethod": "POST",
+        "aoColumns": [
+            { "mData": "name" },
+            { "mData": "timestamp" },
+            { "mData": "lines" },
+            { "mData": "missedLines" },
+            { "mData": "branch" },
+            { "mData": "missedBranch" },
+        ]
     });
 } );
