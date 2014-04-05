@@ -21,6 +21,7 @@ $(document).ready(function() {
 		"aoColumnDefs" : [ {			
 			"sClass" : "center",
 			"aTargets" : [ 1,2,3,4,5 ]
-		} ]
+		} ],
+		"aaSorting": [[ 1,2,3,4,5 "asc" ]]
 	});
 });
