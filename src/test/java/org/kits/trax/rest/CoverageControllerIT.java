@@ -17,14 +17,13 @@ import org.kits.trax.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CoverageControllerIT {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CoverageControllerIT.class);
-	private static final String url = "http://traxtest.herokuapp.com/";
+	private static final String url = "http://localhost:8080/";
 	
 //	@AfterMethod
 //	public void clean() {
@@ -43,7 +42,7 @@ public class CoverageControllerIT {
 
 		List<Coverage> coverages = buildList();
 		String jsonData = JsonUtil.toJsonArray(coverages);
-		HttpResponse response = HttpUtil.post(url + "/coverages/create", jsonData);
+		HttpResponse response = HttpUtil.post(url + "coverages/create", jsonData);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
 		LOGGER.info("Response: " + jsonData);
 		coverages = JsonUtil.fromJsonArray(Coverage.class, jsonData);
@@ -55,7 +54,7 @@ public class CoverageControllerIT {
 
 		List<Coverage> coverages = buildList();
 		String jsonData = JsonUtil.toJsonArray(coverages);
-		HttpResponse response = HttpUtil.post(url + "/coverages/create", jsonData);
+		HttpResponse response = HttpUtil.post(url + "coverages/", jsonData);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
 		LOGGER.info("Response: " + jsonData);
 		coverages = JsonUtil.fromJsonArray(Coverage.class, jsonData);
@@ -67,7 +66,7 @@ public class CoverageControllerIT {
 			throws IllegalStateException, IOException {
 
 		String jsonData = JsonUtil.toJsonArray(coverages);
-		HttpResponse response = HttpUtil.post(url + "/coverages/create", jsonData);
+		HttpResponse response = HttpUtil.post(url + "coverages/create", jsonData);
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -90,7 +89,7 @@ public class CoverageControllerIT {
 	@Test(dataProvider="listData")
 	public void list(List<Coverage> expected) throws IllegalStateException, IOException {
 
-		HttpResponse response = HttpUtil.post(url + "/coverages/");
+		HttpResponse response = HttpUtil.post(url + "coverages/");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -128,10 +127,10 @@ public class CoverageControllerIT {
 		for (int i = 0; i < 10; ++i) {
 			Coverage coverage = new Coverage();
 			coverage.setName("hello.Hello" + System.currentTimeMillis());
-			coverage.setType(TestType.Unit);
+			coverage.setTestType(TestType.Unit);
 			coverage.setTimeStamp(new Date());
-			coverage.setLines(Math.round(100 * Math.random()));
-			coverage.setMissedLines(Math.round(100 * Math.random()));
+			coverage.setLine(Math.round(100 * Math.random()));
+			coverage.setMissedLine(Math.round(100 * Math.random()));
 			coverage.setBranch(Math.round(100 * Math.random()));
 			coverage.setMissedBranch(Math.round(100 * Math.random()));
 			coverages.add(coverage);

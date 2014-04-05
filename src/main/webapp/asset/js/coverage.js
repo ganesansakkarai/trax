@@ -3,16 +3,16 @@ $(document).ready(function() {
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
 		"bServerSide" : true,
-		"sAjaxSource" : "http://traxtest.herokuapp.com/coverages/",
+		"sAjaxSource" : "http://localhost:8080/coverages/",
 		"sServerMethod" : "POST",
 		"aoColumns" : [ {
 			"mData" : "name"
 		}, {
-			"mData" : "timestamp"
+			"mData" : "coverage"
 		}, {
-			"mData" : "lines"
+			"mData" : "line"
 		}, {
-			"mData" : "missedLines"
+			"mData" : "missedLine"
 		}, {
 			"mData" : "branch"
 		}, {
@@ -21,7 +21,6 @@ $(document).ready(function() {
 		"aoColumnDefs" : [ {			
 			"sClass" : "center",
 			"aTargets" : [ 1,2,3,4,5 ]
-		} ],
-		"aaSorting": [[ 1,2,3,4,5 "asc" ]]
+		} ]
 	});
 });
