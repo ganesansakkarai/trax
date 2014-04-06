@@ -1,16 +1,14 @@
 package org.kits.trax.rest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.kits.trax.domain.Coverage;
-import org.kits.trax.domain.TestType;
+import org.kits.trax.domain.Application;
+import org.kits.trax.util.DataUtil;
 import org.kits.trax.util.DateUtil;
 import org.kits.trax.util.HttpUtil;
 import org.kits.trax.util.JsonUtil;
@@ -24,70 +22,32 @@ public class CoverageControllerIT {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CoverageControllerIT.class);
 	private static final String url = "http://localhost:8080/";
-	
-//	@AfterMethod
-//	public void clean() {
-//		HttpUtil.post(url + "/coverages/delete/");
-//	}
 
-	@DataProvider(name = "bulkCreateData")
-	public static Object[][] bulkCreateData() {
+	@DataProvider(name = "data")
+	public static Object[][] data() throws IllegalStateException, IOException {
 
-		List<Coverage> coverages = buildList();
-		return new Object[][] { { coverages } };
-	}
-	
-	@DataProvider(name = "findData")
-	public static Object[][] findData() throws IllegalStateException, IOException {
-
-		List<Coverage> coverages = buildList();
-		String jsonData = JsonUtil.toJsonArray(coverages);
-		HttpResponse response = HttpUtil.post(url + "coverages/create", jsonData);
+		Application application = DataUtil.build();
+		String jsonData = JsonUtil.toJson(application);
+		HttpResponse response = HttpUtil.post(url + "coverage/create", jsonData);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
 		LOGGER.info("Response: " + jsonData);
-		coverages = JsonUtil.fromJsonArray(Coverage.class, jsonData);
-		return new Object[][] { { coverages.get(0) } };
-	}
-	
-	@DataProvider(name = "listData")
-	public static Object[][] listData() throws IllegalStateException, IOException {
-
-		List<Coverage> coverages = buildList();
-		String jsonData = JsonUtil.toJsonArray(coverages);
-		HttpResponse response = HttpUtil.post(url + "coverages/", jsonData);
-		jsonData = IOUtils.toString(response.getEntity().getContent());
-		LOGGER.info("Response: " + jsonData);
-		coverages = JsonUtil.fromJsonArray(Coverage.class, jsonData);
-		return new Object[][] { { coverages } };
+		application = JsonUtil.fromJson(Application.class, jsonData);
+		return new Object[][] { { application } };
 	}
 
-	@Test(dataProvider = "bulkCreateData")
-	public void bulkCreate(List<Coverage> coverages)
-			throws IllegalStateException, IOException {
+	@Test(dataProvider="data")
+	public void findByTimeStamp(Application expected) throws IllegalStateException, IOException {
 
-		String jsonData = JsonUtil.toJsonArray(coverages);
-		HttpResponse response = HttpUtil.post(url + "coverages/create", jsonData);
-		Assert.assertNotNull(response);
-		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-		jsonData = IOUtils.toString(response.getEntity().getContent());
-		LOGGER.info("Response: " + jsonData);
-		coverages = JsonUtil.fromJsonArray(Coverage.class, jsonData);
-	}
-
-	@Test(dataProvider="findData")
-	public void find(Coverage expected) throws IllegalStateException, IOException {
-
-		HttpResponse response = HttpUtil.post(url + "/coverage/" + expected.getId());
+		HttpResponse response = HttpUtil.post(url + "coverage/" + expected.getTestType().name() + "/" + DateUtil.toString(expected.getTimeStamp()));
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
-		Coverage actual = JsonUtil.fromJson(Coverage.class, jsonData);
-		Assert.assertNotNull(actual);
-		Assert.assertEquals(actual.getName(), expected.getName());
+		Assert.assertNotNull(jsonData);
+		System.out.println(jsonData);
 	}
 
-	@Test(dataProvider="listData")
-	public void list(List<Coverage> expected) throws IllegalStateException, IOException {
+	@Test(dataProvider="data")
+	public void list(Application expected) throws IllegalStateException, IOException {
 
 		HttpResponse response = HttpUtil.post(url + "coverages/");
 		Assert.assertNotNull(response);
@@ -95,47 +55,42 @@ public class CoverageControllerIT {
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
 		@SuppressWarnings("unchecked")
 		Map<String, Object> data = JsonUtil.fromJson(HashMap.class, jsonData);
-		Assert.assertEquals(Integer.parseInt(data.get("TotalRecordCount").toString()), expected.size());
-		Assert.assertEquals(data.get("Result"), "OK");
-		Assert.assertNotNull(data.get("Records"));
+		Assert.assertNotNull(data.get("sEcho"));
+		Assert.assertTrue(Integer.parseInt(data.get("iTotalRecords").toString()) > 0);
+		Assert.assertTrue(Integer.parseInt(data.get("iTotalDisplayRecords").toString()) > 0);
+		Assert.assertNotNull(data.get("aoData"));
 	}
 	
-	@Test(dataProvider="listData")
-	public void listByTimeStamp(List<Coverage> expected) throws IllegalStateException, IOException {
+	@Test(dataProvider="data")
+	public void listTimeStamps(Application expected) throws IllegalStateException, IOException {
 
-		HttpResponse response = HttpUtil.post(url + "/coverages/" + DateUtil.toString(expected.get(0).getTimeStamp()));
+		HttpResponse response = HttpUtil.post(url + "builds/");
+		Assert.assertNotNull(response);
+		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+		String jsonData = IOUtils.toString(response.getEntity().getContent());
+		List<String> data = JsonUtil.fromJsonArray(String.class, jsonData);
+		Assert.assertTrue(data.size() > 0);
+	}
+	
+	@Test(dataProvider="data")
+	public void listByTimeStamp(Application expected) throws IllegalStateException, IOException {
+
+		HttpResponse response = HttpUtil.post(url + "/coverage/Unit/" + DateUtil.toString(expected.getTimeStamp()));
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
 		@SuppressWarnings("unchecked")
 		Map<String, Object> data = JsonUtil.fromJson(HashMap.class, jsonData);
-		Assert.assertEquals(Integer.parseInt(data.get("TotalRecordCount").toString()), expected.size());
-		Assert.assertEquals(data.get("Result"), "OK");
-		Assert.assertNotNull(data.get("Records"));
+		Assert.assertNotNull(data.get("sEcho"));
+		Assert.assertTrue(Integer.parseInt(data.get("iTotalRecords").toString()) > 0);
+		Assert.assertTrue(Integer.parseInt(data.get("iTotalDisplayRecords").toString()) > 0);
+		Assert.assertNotNull(data.get("aoData"));
 	}
 	
-	@Test(dataProvider="listData")
-	public void bulkDelete(List<Coverage> expected) {
+	@Test(dataProvider="data")
+	public void delete(Application expected) {
 
-		HttpResponse response = HttpUtil.post(url + "/coverages/delete/" + DateUtil.toString(expected.get(0).getTimeStamp()));
+		HttpResponse response = HttpUtil.post(url + "/coverage/Unit/delete/" + DateUtil.toString(expected.getTimeStamp()));
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-	}
-
-	private static List<Coverage> buildList() {
-
-		List<Coverage> coverages = new ArrayList<Coverage>();
-		for (int i = 0; i < 10; ++i) {
-			Coverage coverage = new Coverage();
-			coverage.setName("hello.Hello" + System.currentTimeMillis());
-			coverage.setTestType(TestType.Unit);
-			coverage.setTimeStamp(new Date());
-			coverage.setLine(Math.round(100 * Math.random()));
-			coverage.setMissedLine(Math.round(100 * Math.random()));
-			coverage.setBranch(Math.round(100 * Math.random()));
-			coverage.setMissedBranch(Math.round(100 * Math.random()));
-			coverages.add(coverage);
-		}
-
-		return coverages;
 	}
 }

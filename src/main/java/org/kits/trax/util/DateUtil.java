@@ -8,14 +8,33 @@ import java.util.Date;
 public class DateUtil {
 
 	public static String toString(Date date) {
-		
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	    return df.format(date);	    
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
+		return df.format(date);
+	}
+
+	public static String toString(Long timeStamp) {
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
+		String dateStr = df.format(new Date(timeStamp));
+		try {
+	        System.out.println(timeStamp + " = " + DateUtil.toLong(dateStr));
+        } catch (ParseException e) {
+	        e.printStackTrace();
+        }
+		return dateStr;
 	}
 	
+	public static Long toLong(String dateStr) throws ParseException {
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
+		Long ts = df.parse(dateStr).getTime();
+		return ts;
+	}
+
 	public static Date toDate(String dateStr) throws ParseException {
-		
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	    return df.parse(dateStr);
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
+		return df.parse(dateStr);
 	}
 }

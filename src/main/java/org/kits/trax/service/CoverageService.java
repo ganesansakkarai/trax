@@ -1,29 +1,29 @@
 package org.kits.trax.service;
 
-import java.util.Date;
 import java.util.List;
 
-import org.kits.trax.domain.Coverage;
+import org.kits.trax.domain.Application;
+import org.kits.trax.domain.TestType;
 
 public interface CoverageService {
 
-	public long countAllCoverages();
+	public Long countAllApplications();
 
-	public void deleteCoverage(Coverage coverage);
+	public Application findApplication(Long id);
 
-	public Coverage findCoverage(Long id);
+	public List<Application> findAllApplications();
+	
+	public List<Long> findAllTimeStamps(String name, TestType testType);
+	
+	public List<String> findApplicationNames(TestType testType);
+	
+	public Application findApplication(Long timeStamp, TestType testType);
 
-	public List<Coverage> findAllCoverages();
+	public List<Application> findApplications(int page, int maxResults);
 
-	public List<Coverage> findCoverages(Date timeStamp);
+	public Application updateApplication(Application application);
 
-	public List<Coverage> findCoverages(int page, int maxResults);
+	public Application saveApplication(Application application);
 
-	public Coverage saveCoverage(Coverage coverage);
-
-	public Coverage updateCoverage(Coverage coverage);
-
-	public List<Coverage> saveCoverages(List<Coverage> coverages);
-
-	public void deleteCoverages(List<Coverage> coverages);
+	public void deleteApplication(Long timeStamp, TestType testType);
 }

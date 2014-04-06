@@ -60,6 +60,7 @@ public class JsonUtil {
 
     public static <T> List<T> fromJsonArray(Class<T> aClass, String json) {
 
+    	LOGGER.info("JSON " + json);
         List<T> entities = new JSONDeserializer<List<T>>().use("values", aClass).deserialize(json,
                 List.class);
 

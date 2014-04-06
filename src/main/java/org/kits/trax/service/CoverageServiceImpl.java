@@ -1,11 +1,11 @@
 package org.kits.trax.service;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.kits.trax.domain.Coverage;
+import org.kits.trax.domain.Application;
+import org.kits.trax.domain.TestType;
 import org.kits.trax.repository.CoverageRepository;
+import org.kits.trax.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,60 +18,54 @@ public class CoverageServiceImpl implements CoverageService {
 	@Autowired
 	private CoverageRepository coverageRepository;
 
-	public long countAllCoverages() {
+	public Long countAllApplications() {
+	    return coverageRepository.count();
+    }
 
-		return coverageRepository.count();
-	}
+	public Application findApplication(Long id) {
+	    
+	    return coverageRepository.findOne(id);
+    }
 
-	public void deleteCoverage(Coverage coverage) {
+	public List<Application> findAllApplications() {
+	    
+		Iterable<Application> applications = coverageRepository.findAll();
+	    return (List<Application>) applications;
+    }
 
-		coverageRepository.delete(coverage);
-	}
+	public List<Long> findAllTimeStamps(String name, TestType testType) {
+	    
+		return coverageRepository.findAllTimeStamp(name, testType);
+    }
 
-	public void deleteCoverages(List<Coverage> coverages) {
+	public List<String> findApplicationNames(TestType testType) {
+	    
+		return coverageRepository.findApplicationNames(testType);
+    }
 
-		for (Coverage coverage : coverages) {
-			coverageRepository.delete(coverage);
-		}
-	}
+	public Application findApplication(Long timeStamp, TestType testType) {
+		System.out.println(DateUtil.toString(timeStamp));
+		return coverageRepository.findByTimeStampAndTestType(timeStamp, testType);
+    }
 
-	public Coverage findCoverage(Long id) {
+	public List<Application> findApplications(int page, int maxResults) {
+	    Iterable<Application> applications = coverageRepository.findAll(new PageRequest(page, maxResults));
+	    return (List<Application>) applications;
+    }
 
-		return coverageRepository.findOne(id);
-	}
+	public Application updateApplication(Application application) {
+	    
+		return coverageRepository.save(application);
+    }
 
-	public List<Coverage> findAllCoverages() {
+	public Application saveApplication(Application application) {
+	    
+	    return coverageRepository.save(application);
+    }
 
-		return (List<Coverage>) coverageRepository.findAll();
-	}
-
-	public List<Coverage> findCoverages(Date timeStamp) {
-
-		return coverageRepository.findByTimeStamp(timeStamp);
-	}
-
-	public List<Coverage> findCoverages(int page, int maxResults) {
-
-		return coverageRepository.findAll(new PageRequest(page, maxResults)).getContent();
-	}
-
-	public Coverage saveCoverage(Coverage coverage) {
-
-		return coverageRepository.save(coverage);
-	}
-
-	public List<Coverage> saveCoverages(List<Coverage> coverages) {
-
-		List<Coverage> saved = new ArrayList<Coverage>();
-		for (Coverage coverage : coverages) {
-			saved.add(coverageRepository.save(coverage));
-		}
-
-		return saved;
-	}
-
-	public Coverage updateCoverage(Coverage coverage) {
-
-		return coverageRepository.save(coverage);
-	}
+	public void deleteApplication(Long timeStamp, TestType testType) {
+	    
+		Application application = coverageRepository.findByTimeStampAndTestType(timeStamp, testType);
+		coverageRepository.delete(application);
+    }
 }

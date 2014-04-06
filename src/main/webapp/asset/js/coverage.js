@@ -6,7 +6,9 @@ $(document).ready(function() {
 		"sAjaxSource" : "http://localhost:8080/coverages/",
 		"sServerMethod" : "POST",
 		"aoColumns" : [ {
-			"mData" : "name"
+			"mData" : "className"
+		}, {
+			"mData" : "methodName"
 		}, {
 			"mData" : "coverage"
 		}, {
@@ -20,7 +22,7 @@ $(document).ready(function() {
 		}, ],
 		"aoColumnDefs" : [ {			
 			"sClass" : "center",
-			"aTargets" : [ 1,2,3,4,5 ]
+			"aTargets" : [ 1,2,3,4,5,6 ]
 		} ]
 	});
 });

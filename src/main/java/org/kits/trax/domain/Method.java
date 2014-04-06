@@ -1,25 +1,19 @@
 package org.kits.trax.domain;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
-public class Coverage {
+public class Method {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date timeStamp;
-	private TestType testType;
 	private long line;
 	private long missedLine;
 	private long branch;
@@ -37,16 +31,8 @@ public class Coverage {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Date getTimeStamp() {
-		return timeStamp;
-	}
-
-	public void setTimeStamp(Date timeStamp) {
-		this.timeStamp = timeStamp;
+	public void setName(String methodName) {
+		this.name = methodName;
 	}
 
 	public long getLine() {
@@ -79,14 +65,6 @@ public class Coverage {
 
 	public void setMissedBranch(long missedBranch) {
 		this.missedBranch = missedBranch;
-	}
-
-	public TestType getTestType() {
-		return testType;
-	}
-
-	public void setTestType(TestType testType) {
-		this.testType = testType;
 	}
 
 	public String getCoverage() {
