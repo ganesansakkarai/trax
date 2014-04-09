@@ -1,9 +1,7 @@
 package org.kits.trax.rest;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -34,37 +32,23 @@ public class CoverageControllerIT {
 		application = JsonUtil.fromJson(Application.class, jsonData);
 		return new Object[][] { { application } };
 	}
+	
+	@Test
+	public void create() throws IllegalStateException, IOException {
 
-	@Test(dataProvider="data")
-	public void findByTimeStamp(Application expected) throws IllegalStateException, IOException {
-
-		HttpResponse response = HttpUtil.post(url + "coverage/" + expected.getTestType().name() + "/" + DateUtil.toString(expected.getTimeStamp()));
-		Assert.assertNotNull(response);
-		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-		String jsonData = IOUtils.toString(response.getEntity().getContent());
-		Assert.assertNotNull(jsonData);
-		System.out.println(jsonData);
-	}
-
-	@Test(dataProvider="data")
-	public void list(Application expected) throws IllegalStateException, IOException {
-
-		HttpResponse response = HttpUtil.post(url + "coverages/");
-		Assert.assertNotNull(response);
-		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-		String jsonData = IOUtils.toString(response.getEntity().getContent());
-		@SuppressWarnings("unchecked")
-		Map<String, Object> data = JsonUtil.fromJson(HashMap.class, jsonData);
-		Assert.assertNotNull(data.get("sEcho"));
-		Assert.assertTrue(Integer.parseInt(data.get("iTotalRecords").toString()) > 0);
-		Assert.assertTrue(Integer.parseInt(data.get("iTotalDisplayRecords").toString()) > 0);
-		Assert.assertNotNull(data.get("aoData"));
+		Application application = DataUtil.build();
+		String jsonData = JsonUtil.toJson(application);
+		HttpResponse response = HttpUtil.post(url + "coverage/create", jsonData);
+		jsonData = IOUtils.toString(response.getEntity().getContent());
+		LOGGER.info("Response: " + jsonData);
+		application = JsonUtil.fromJson(Application.class, jsonData);
+		Assert.assertNotNull(application);
 	}
 	
 	@Test(dataProvider="data")
-	public void listTimeStamps(Application expected) throws IllegalStateException, IOException {
+	public void listApplications(Application expected) throws IllegalStateException, IOException {
 
-		HttpResponse response = HttpUtil.post(url + "builds/");
+		HttpResponse response = HttpUtil.post(url + "applications/" + expected.getTestType().name() + "/");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -73,23 +57,40 @@ public class CoverageControllerIT {
 	}
 	
 	@Test(dataProvider="data")
-	public void listByTimeStamp(Application expected) throws IllegalStateException, IOException {
+	public void listBuilds(Application expected) throws IllegalStateException, IOException {
 
-		HttpResponse response = HttpUtil.post(url + "/coverage/Unit/" + DateUtil.toString(expected.getTimeStamp()));
+		HttpResponse response = HttpUtil.post(url + "builds/" + expected.getName() + "/" + expected.getTestType().name() + "/");
+		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
-		@SuppressWarnings("unchecked")
-		Map<String, Object> data = JsonUtil.fromJson(HashMap.class, jsonData);
-		Assert.assertNotNull(data.get("sEcho"));
-		Assert.assertTrue(Integer.parseInt(data.get("iTotalRecords").toString()) > 0);
-		Assert.assertTrue(Integer.parseInt(data.get("iTotalDisplayRecords").toString()) > 0);
-		Assert.assertNotNull(data.get("aoData"));
+		List<String> data = JsonUtil.fromJsonArray(String.class, jsonData);
+		Assert.assertTrue(data.size() > 0);
+	}	
+
+	@Test(dataProvider="data")
+	public void coverageSummary(Application expected) throws IllegalStateException, IOException {
+
+		HttpResponse response = HttpUtil.post(url + "coverage/summary/" + expected.getName() + "/" + expected.getTestType().name() + "/" + DateUtil.toString(expected.getTimeStamp()));
+		Assert.assertNotNull(response);
+		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+		String jsonData = IOUtils.toString(response.getEntity().getContent());
+		Assert.assertNotNull(jsonData);
+	}
+
+	@Test(dataProvider="data")
+	public void findApplication(Application expected) throws IllegalStateException, IOException {
+
+		HttpResponse response = HttpUtil.post(url + "coverage/" + expected.getName() + "/" + expected.getTestType().name() + "/" + DateUtil.toString(expected.getTimeStamp()));
+		Assert.assertNotNull(response);
+		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+		String jsonData = IOUtils.toString(response.getEntity().getContent());
+		Assert.assertNotNull(jsonData);
 	}
 	
 	@Test(dataProvider="data")
 	public void delete(Application expected) {
 
-		HttpResponse response = HttpUtil.post(url + "/coverage/Unit/delete/" + DateUtil.toString(expected.getTimeStamp()));
+		HttpResponse response = HttpUtil.post(url + "/coverage/delete/" + expected.getName() + "/" + expected.getTestType().name() + "/" + DateUtil.toString(expected.getTimeStamp()) + "/");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 	}

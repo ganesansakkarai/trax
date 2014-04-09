@@ -22,10 +22,11 @@ public class Package {
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinTable(name = "PKG_CLASS", joinColumns = @JoinColumn(name = "PKG_ID"), inverseJoinColumns = @JoinColumn(name = "CLASS_ID"))
 	private List<Clazz> clazzes;
-	private transient long line;
-	private transient long missedLine;
-	private transient long branch;
-	private transient long missedBranch;
+	private double line;
+	private double missedLine;
+	private double branch;
+	private double missedBranch;
+	private double coverage;
 	
 	public Long getId() {
 		return id;
@@ -51,35 +52,43 @@ public class Package {
 		this.clazzes = clazzes;
 	}
 
-	public long getLine() {
+	public double getLine() {
 		return line;
 	}
 
-	public void setLine(long line) {
+	public void setLine(double line) {
 		this.line = line;
 	}
 
-	public long getMissedLine() {
+	public double getMissedLine() {
 		return missedLine;
 	}
 
-	public void setMissedLine(long missedLine) {
+	public void setMissedLine(double missedLine) {
 		this.missedLine = missedLine;
 	}
 
-	public long getBranch() {
+	public double getBranch() {
 		return branch;
 	}
 
-	public void setBranch(long branch) {
+	public void setBranch(double branch) {
 		this.branch = branch;
 	}
 
-	public long getMissedBranch() {
+	public double getMissedBranch() {
 		return missedBranch;
 	}
 
-	public void setMissedBranch(long missedBranch) {
+	public void setMissedBranch(double missedBranch) {
 		this.missedBranch = missedBranch;
+	}
+
+	public double getCoverage() {
+		return coverage;
+	}
+
+	public void setCoverage(double coverage) {
+		this.coverage = coverage;
 	}
 }

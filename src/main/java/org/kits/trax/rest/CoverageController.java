@@ -45,8 +45,6 @@ public class CoverageController {
 			coverage = coverageService.saveApplication(coverage);
 			String jsonData = JsonUtil.toJson(coverage);
 			response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
-			long count = coverageService.countAllApplications();
-			System.out.println(count);
 		} catch (Exception e) {
 			LOGGER.error("Error adding coverages", e);
 			response = new ResponseEntity<String>(headers, HttpStatus.BAD_REQUEST);
@@ -55,32 +53,6 @@ public class CoverageController {
 		return response;
 	}
 
-	@RequestMapping(value = "/coverage/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
-	@ResponseBody
-	public ResponseEntity<String> find(@PathVariable("id") Long id) {
-
-		ResponseEntity<String> response = null;
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-
-		Application result = coverageService.findApplication(id);
-		if (result != null) {
-			Map info = new HashMap();
-			info.put("sEcho", 1);
-			info.put("iTotalRecords", result.getPackages().size());
-			info.put("iTotalDisplayRecords", result.getPackages().size());
-			info.put("aaData", result.getPackages());
-			String jsonData = JsonUtil.toJson(info);
-			response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
-		} else {
-			LOGGER.error("Coverage not found for id " + id);
-			response = new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-		}
-
-		return response;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/applications/{testType}", method = RequestMethod.POST, headers = "Accept=application/json")
 	@ResponseBody
 	public ResponseEntity<String> listApplications(@PathVariable("testType") String testType) {
@@ -89,7 +61,7 @@ public class CoverageController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		List<String> result = coverageService.findApplicationNames(TestType.valueOf(testType));
+		List<String> result = coverageService.listApplications(TestType.valueOf(testType));
 		String jsonData = JsonUtil.toJsonArray(result);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 
@@ -98,13 +70,14 @@ public class CoverageController {
 
 	@RequestMapping(value = "/builds/{name}/{testType}", method = RequestMethod.POST, headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> listBuilds(@PathVariable("name") String name, @PathVariable("testType") String testType) {
+	public ResponseEntity<String> listBuilds(@PathVariable("name") String name,
+	        @PathVariable("testType") String testType) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		List<Long> result = coverageService.findAllTimeStamps(name, TestType.valueOf(testType));
+		List<Long> result = coverageService.listBuilds(name, TestType.valueOf(testType));
 		List<String> builds = new ArrayList<String>();
 		for (Long timmeStamp : result) {
 			builds.add(DateUtil.toString(timmeStamp));
@@ -115,10 +88,10 @@ public class CoverageController {
 		return response;
 	}
 
-	@RequestMapping(value = "/coverages/summary/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/coverage/summary/{name}/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> coverageSummary(
-	        @PathVariable("timeStamp") String timeStamp, @PathVariable("testType") String testType)
+	public ResponseEntity<String> coverageSummary(@PathVariable("name") String name,
+	        @PathVariable("testType") String testType, @PathVariable("timeStamp") String timeStamp)
 	        throws ParseException {
 
 		ResponseEntity<String> response = null;
@@ -126,29 +99,18 @@ public class CoverageController {
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		LOGGER.info("Coverages Summary for " + timeStamp);
-		Application result = coverageService.findApplication(DateUtil.toLong(timeStamp), TestType.valueOf(testType));
-		Method summary = new Method();
-		for(org.kits.trax.domain.Package aPackage: result.getPackages()) {
-			for(Clazz clazz : aPackage.getClazzes()) {
-				for (Method coverage : clazz.getMethods()) {
-					summary.setLine(summary.getLine() + coverage.getLine());
-					summary.setMissedLine(summary.getMissedLine() + coverage.getMissedLine());
-					summary.setBranch(summary.getBranch() + coverage.getBranch());
-					summary.setMissedBranch(summary.getMissedBranch() + coverage.getMissedBranch());
-				}
-			}
-		}
-		
-		String jsonData = JsonUtil.toJson(summary);
+		Application result = coverageService.findApplication(name, TestType.valueOf(testType), DateUtil.toLong(timeStamp));
+		result.setPackages(null);
+		String jsonData = JsonUtil.toJson(result);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
-
 		return response;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/coverage/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/coverage/{name}/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> findByTimeStampTestType(@PathVariable("timeStamp") String timeStamp, @PathVariable("testType") String testType)
+	public ResponseEntity<String> findApplication(@PathVariable("name") String name,
+	        @PathVariable("testType") String testType, @PathVariable("timeStamp") String timeStamp)
 	        throws ParseException {
 
 		ResponseEntity<String> response = null;
@@ -156,8 +118,7 @@ public class CoverageController {
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		LOGGER.info("Listing coverages for " + DateUtil.toLong(timeStamp));
-		Application result = coverageService.findApplication(DateUtil.toLong(timeStamp), TestType.valueOf(testType));
-		long count = coverageService.countAllApplications();
+		Application result = coverageService.findApplication(name, TestType.valueOf(testType), DateUtil.toLong(timeStamp));
 		Map info = new HashMap();
 		info.put("sEcho", 1);
 		info.put("iTotalRecords", 1);
@@ -169,8 +130,9 @@ public class CoverageController {
 		return response;
 	}
 
-	@RequestMapping(value = "/coverages/delete/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> delete(@PathVariable("timeStamp") String timeStamp, @PathVariable("testType") String testType) {
+	@RequestMapping(value = "/coverage/delete/{name}/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> delete(@PathVariable("name") String name, @PathVariable("testType") String testType,
+	        @PathVariable("timeStamp") String timeStamp) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
@@ -178,7 +140,7 @@ public class CoverageController {
 
 		try {
 			LOGGER.info("Deleting coverages for " + timeStamp);
-			coverageService.deleteApplication(DateUtil.toLong(timeStamp), TestType.valueOf(testType));
+			coverageService.deleteApplication(name, TestType.valueOf(testType), DateUtil.toLong(timeStamp));
 			response = new ResponseEntity<String>(headers, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("Error Deleting coverage :", e);

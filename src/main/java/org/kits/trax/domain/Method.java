@@ -1,7 +1,5 @@
 package org.kits.trax.domain;
 
-import java.text.DecimalFormat;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,10 +12,11 @@ public class Method {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
-	private long line;
-	private long missedLine;
-	private long branch;
-	private long missedBranch;
+	private double line;
+	private double missedLine;
+	private double branch;
+	private double missedBranch;
+	private double coverage;
 
 	public Long getId() {
 		return id;
@@ -35,42 +34,43 @@ public class Method {
 		this.name = methodName;
 	}
 
-	public long getLine() {
+	public double getLine() {
 		return line;
 	}
 
-	public void setLine(long coveredLine) {
+	public void setLine(double coveredLine) {
 		this.line = coveredLine;
 	}
 
-	public long getMissedLine() {
+	public double getMissedLine() {
 		return missedLine;
 	}
 
-	public void setMissedLine(long missedLine) {
+	public void setMissedLine(double missedLine) {
 		this.missedLine = missedLine;
 	}
 
-	public long getBranch() {
+	public double getBranch() {
 		return branch;
 	}
 
-	public void setBranch(long coveredBranch) {
+	public void setBranch(double coveredBranch) {
 		this.branch = coveredBranch;
 	}
 
-	public long getMissedBranch() {
+	public double getMissedBranch() {
 		return missedBranch;
 	}
 
-	public void setMissedBranch(long missedBranch) {
+	public void setMissedBranch(double missedBranch) {
 		this.missedBranch = missedBranch;
 	}
 
-	public String getCoverage() {
+	public double getCoverage() {
+		return coverage;
+	}
 
-		double coverage = (getLine() - getMissedLine()) / getLine() * 100;
-		DecimalFormat df = new DecimalFormat("#.00");
-		return df.format(coverage);
+	public void setCoverage(double coverage) {
+		this.coverage = coverage;
 	}
 }
