@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.kits.trax.domain.Application;
-import org.kits.trax.domain.Clazz;
-import org.kits.trax.domain.Method;
 import org.kits.trax.domain.TestType;
 import org.kits.trax.service.CoverageService;
 import org.kits.trax.util.DateUtil;
