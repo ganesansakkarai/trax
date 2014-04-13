@@ -61,7 +61,6 @@ public class CoverageController {
 
 		List<String> result = coverageService.listApplications(TestType.valueOf(testType));
 		String jsonData = JsonUtil.toJsonArray(result);
-		System.out.println(">>>>>>>>>>>>>>>>>" + jsonData);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 
 		return response;
