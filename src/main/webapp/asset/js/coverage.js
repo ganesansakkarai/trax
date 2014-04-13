@@ -1,43 +1,102 @@
+var oTable ;
+function loadApplication(buildId)
+	{
+	if(buildId==undefined)
+	{
+		// Change this default value as per your record in db.
+		buildId='2014-04-13T21:47:39:874+0530';
+	}	
+	oTable = $('#coverage').dataTable({
+			"bJQueryUI" : true,
+			"bDestroy": true,
+			"sPaginationType" : "full_numbers",
+			"bServerSide" : true,
+			"sAjaxSource" : "http://171.76.154.222:8080/coverage/summary/Sample/Unit/"+buildId,
+			"sServerMethod" : "POST",
+			"aoColumns" : [ 
+			{
+			     "mDataProp": null,
+			     "sClass": "application left",
+			     "sDefaultContent": '<img src="../asset/image/details_open.png">',
+			     "sWidth": "10%"
+			},
+			{
+				"mData" : "id"
+			},
+			{
+				"mData" : "name"
+			}, {
+				"mData" : "coverage"
+			}, {
+				"mData" : "line"
+			}, {
+				"mData" : "missedLine"
+			}, {
+				"mData" : "branch"
+			}, {
+				"mData" : "missedBranch"
+			}, ],
+			"aoColumnDefs" : [ 
+			          {"sClass" : "center","aTargets" : [2,3,4,5,6,7]},
+			          { "bVisible": false, "aTargets": [ 1 ] }]
+		});
+	}
+
 $(document).ready(function() {
+	
+	var defaultApplication = '';
+	$.ajax({
+		dataType : "json",
+		type : 'POST',
+		async : false,
+		url : 'http://171.76.154.222:8080/applications/Unit/',
+		success : function(responseObject) {
+			coverage = responseObject[0];
+			var sel = $("#applicationType");
+			sel.empty();
+			for ( var i = 0; i < responseObject.length; i++) {
+				if(i==0)
+					{
+					defaultApplication = responseObject[i];
+					}
+				sel.append('<option value="' + responseObject[i] + '">'
+						+ responseObject[i] + '</option>');
+			}
+		},
+		error : function(e, ts, et) {
+			alert('fail' + ts);
+		}
+	});
+	
+	loadApplication(); 
+	
+	
+		
+	$.ajax({
+		dataType : "json",
+		type : 'POST',
+		async : false,
+		url : 'http://171.76.154.222:8080/builds/'+defaultApplication+'/Unit/',
+		success : function(responseObject) {
+			coverage = responseObject[0];
+			var sel = $("#builds");
+			sel.empty();
+			for ( var i = 0; i < responseObject.length; i++) {
+				sel.append('<option value="' + responseObject[i] + '">'
+						+ responseObject[i] + '</option>');
+			}
+		},
+		error : function(e, ts, et) {
+			alert('fail::' + ts);
+		}
+	});
 	
 	var anOpen = [];
 	var parentRow;
 	var packageRow = false;
 	var classRow = false;
 	
-	var oTable = $('#coverage').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bServerSide" : true,
-		"sAjaxSource" : "http://localhost:8080/coverage/summary/Sample/Unit/2014-04-13T11:27:12:109+0530",
-		"sServerMethod" : "POST",
-		"aoColumns" : [ 
-		{
-		     "mDataProp": null,
-		     "sClass": "application left",
-		     "sDefaultContent": '<img src="../asset/image/details_open.png">',
-		     "sWidth": "10%"
-		},
-		{
-			"mData" : "id"
-		},
-		{
-			"mData" : "name"
-		}, {
-			"mData" : "coverage"
-		}, {
-			"mData" : "line"
-		}, {
-			"mData" : "missedLine"
-		}, {
-			"mData" : "branch"
-		}, {
-			"mData" : "missedBranch"
-		}, ],
-		"aoColumnDefs" : [ 
-		          {"sClass" : "center","aTargets" : [2,3,4,5,6,7]},
-		          { "bVisible": false, "aTargets": [ 1 ] }]
-	});
+	
 	
 	$("#coverage").removeAttr("style");
 	
