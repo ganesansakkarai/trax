@@ -11,7 +11,7 @@ function loadApplication(buildId)
 			"bDestroy": true,
 			"sPaginationType" : "full_numbers",
 			"bServerSide" : true,
-			"sAjaxSource" : "http://171.76.154.222:8080/coverage/summary/Sample/Unit/"+buildId,
+			"sAjaxSource" : "http://localhost:8080/coverage/summary/Sample/Unit/"+buildId,
 			"sServerMethod" : "POST",
 			"aoColumns" : [ 
 			{
@@ -76,7 +76,7 @@ $(document).ready(function() {
 		dataType : "json",
 		type : 'POST',
 		async : false,
-		url : 'http://171.76.154.222:8080/builds/'+defaultApplication+'/Unit/',
+		url : 'http://localhost:8080/builds/'+defaultApplication+'/Unit/',
 		success : function(responseObject) {
 			coverage = responseObject[0];
 			var sel = $("#builds");
