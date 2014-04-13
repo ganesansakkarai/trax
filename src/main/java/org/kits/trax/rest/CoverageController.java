@@ -61,6 +61,7 @@ public class CoverageController {
 
 		List<String> result = coverageService.listApplications(TestType.valueOf(testType));
 		String jsonData = JsonUtil.toJsonArray(result);
+		System.out.println(">>>>>>>>>>>>>>>>>" + jsonData);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 
 		return response;
@@ -85,21 +86,28 @@ public class CoverageController {
 
 		return response;
 	}
-
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/coverage/summary/{name}/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
 	@ResponseBody
 	public ResponseEntity<String> coverageSummary(@PathVariable("name") String name,
 	        @PathVariable("testType") String testType, @PathVariable("timeStamp") String timeStamp)
 	        throws ParseException {
 
+		List<Application> applications = new ArrayList<Application>();
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		LOGGER.info("Coverages Summary for " + timeStamp);
 		Application result = coverageService.findApplication(name, TestType.valueOf(testType), DateUtil.toLong(timeStamp));
-		result.setPackages(null);
-		String jsonData = JsonUtil.toJson(result);
+		applications.add(result);
+		Map info = new HashMap();
+		info.put("sEcho", 1);
+		info.put("iTotalRecords", 1);
+		info.put("iTotalDisplayRecords", 1);
+		info.put("aaData", applications);
+		String jsonData = JsonUtil.toJson(info);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
