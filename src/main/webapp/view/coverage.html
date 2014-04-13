@@ -4,7 +4,6 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Unit Test Coverage</title>
 	<style type="text/css" title="currentStyle">
-			@import "../asset/css/demo_page.css";
 			@import "../asset/css/demo_table_jui.css";
 			@import "../asset/themes/smoothness/jquery-ui-1.8.4.custom.css";
 			/*
@@ -29,11 +28,12 @@
 	<script type="text/javascript" language="javascript" src="../asset/js/coverage.js"></script>
 </head>
 <body id="index" style="margin-top: 100px; margin-left: 100px; margin-right: 100px;">
-		<table cellpadding="0" cellspacing="0" border="0" class="display" id="coverage">
+		<table cellpadding="0" cellspacing="0" border="0" class="display" id="coverage" style="width: 100% !important;">
 			<thead>
 				<tr>
-					<th width="15%">Class</th>
-					<th width="15%">Method</th>
+					<th style="width: 73px;"></th>
+					<th id="id" style="display:none;">Id</th>
+					<th width="30%">Class</th>
 					<th width="10%">Coverage</th>
 					<th width="10%">Line Count</th>
 					<th width="10%">Missed Line</th>
