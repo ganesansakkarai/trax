@@ -49,7 +49,7 @@ $(document).ready(function() {
 		dataType : "json",
 		type : 'POST',
 		async : false,
-		url : 'http://171.76.154.222:8080/applications/Unit/',
+		url : 'http://localhost:8080/applications/Unit/',
 		success : function(responseObject) {
 			coverage = responseObject[0];
 			var sel = $("#applicationType");
