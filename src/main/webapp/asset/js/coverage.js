@@ -1,22 +1,96 @@
-var oTable ;
-function loadApplication(buildId)
-	{
-	if(buildId==undefined)
-	{
-		// Change this default value as per your record in db.
-		buildId='2014-04-13T21:47:39:874+0530';
-	}	
-	oTable = $('#coverage').dataTable({
+$(document).ready(function() {
+	var oTable ;
+	var slash = '/'
+	var url = 'http://localhost:8080/coverage/summary/';
+	var appListUrl = 'http://localhost:8080/applications/'
+	var buildUrl = 'http://localhost:8080/builds/'
+	var selectedApp;
+	var selectedBuild;
+	var testType = 'Unit';	
+	var anOpen = [];
+	var parentRow;
+	var packageRow = false;
+	var classRow = false;
+	
+	$(function() {
+		$("#testTabs").tabs();
+	});
+	
+	$.ajax({
+		dataType : "json",
+		type : 'POST',
+		async : false,
+		url : appListUrl + testType,
+		success : function(responseObject) {
+			var applications = $("#applicationType");
+			applications.empty();
+			$.each(responseObject, function( index, value ) {
+				applications.append('<option value="' + value + '">'+ value + '</option>');
+			});
+			
+			if(selectedApp == undefined) {
+				selectedApp = $("#applicationType option:first").val();
+			}
+			loadBuild();
+		},
+		error : function(xhr, status, error) {
+			alert('failed : ' + err.Message);
+		}
+	});
+	
+	$("#applicationType").change(function () {
+		
+		$( "#applicationType option:selected" ).each(function() {
+			selectedApp = $( this ).text();
+		});
+		loadBuild();
+	})
+	
+	function loadBuild(){
+		$.ajax({
+			dataType : "json",
+			type : 'POST',
+			async : false,
+			url : buildUrl + selectedApp + '/' + testType, 
+			success : function(responseObject) {
+				var builds = $("#builds");
+				builds.empty();
+				$.each(responseObject, function( index, value ) {
+					builds.append('<option value="' + value + '">'+ value + '</option>');
+				});
+				
+				if(selectedBuild == undefined) {
+					selectedBuild = $("#builds option:first").val();
+				}
+			  refreshTable();
+			}
+		});
+	}
+	
+	$("#builds").change(function () {
+		
+		$( "#builds option:selected" ).each(function() {
+			  selectedBuild = $( this ).text();
+			  refreshTable();
+		});
+	})
+	
+	function refreshTable() {
+		
+		packageRow = false;
+		classRow = false;
+		
+		oTable = $('#coverage').dataTable({
 			"bJQueryUI" : true,
 			"bDestroy": true,
 			"sPaginationType" : "full_numbers",
 			"bServerSide" : true,
-			"sAjaxSource" : "http://localhost:8080/coverage/summary/Sample/Unit/"+buildId,
+			"sAjaxSource" :  url + selectedApp + '/' + testType + '/' + selectedBuild,
 			"sServerMethod" : "POST",
 			"aoColumns" : [ 
 			{
 			     "mDataProp": null,
-			     "sClass": "application left",
+			     "sClass": "package left",
 			     "sDefaultContent": '<img src="../asset/image/details_open.png">',
 			     "sWidth": "10%"
 			},
@@ -40,97 +114,42 @@ function loadApplication(buildId)
 			          {"sClass" : "center","aTargets" : [2,3,4,5,6,7]},
 			          { "bVisible": false, "aTargets": [ 1 ] }]
 		});
-	}
-
-$(document).ready(function() {
-	
-	var defaultApplication = '';
-	$.ajax({
-		dataType : "json",
-		type : 'POST',
-		async : false,
-		url : 'http://localhost:8080/applications/Unit/',
-		success : function(responseObject) {
-			coverage = responseObject[0];
-			var sel = $("#applicationType");
-			sel.empty();
-			for ( var i = 0; i < responseObject.length; i++) {
-				if(i==0)
-					{
-					defaultApplication = responseObject[i];
-					}
-				sel.append('<option value="' + responseObject[i] + '">'
-						+ responseObject[i] + '</option>');
-			}
-		},
-		error : function(e, ts, et) {
-			alert('fail' + ts);
-		}
-	});
-	
-	loadApplication(); 
-	
-	
 		
-	$.ajax({
-		dataType : "json",
-		type : 'POST',
-		async : false,
-		url : 'http://localhost:8080/builds/'+defaultApplication+'/Unit/',
-		success : function(responseObject) {
-			coverage = responseObject[0];
-			var sel = $("#builds");
-			sel.empty();
-			for ( var i = 0; i < responseObject.length; i++) {
-				sel.append('<option value="' + responseObject[i] + '">'
-						+ responseObject[i] + '</option>');
-			}
-		},
-		error : function(e, ts, et) {
-			alert('fail::' + ts);
+		$("#coverage").removeAttr("style");
+	}
+	
+	$('#coverage td.package').live( 'click', function () {
+		
+		if(packageRow || classRow){
+			return false;
 		}
+		var nTr = this.parentNode;
+		parentRow = nTr;
+		var i = $.inArray( nTr, anOpen );
+	    
+		if ( i === -1 ) {
+			$('img', this).attr( 'src', "../asset/image/details_close.png" );
+			fnOpenNewRow( nTr, fnClazzesDetails(oTable, nTr), 'details' );
+			anOpen.push( nTr );
+	    } else {
+	    	$('img', this).attr( 'src', "../asset/image/details_open.png" );
+	    	fnCloseOpenedRow( nTr );
+	    	anOpen.splice( i, 1 );
+	    }
+		
 	});
-	
-	var anOpen = [];
-	var parentRow;
-	var packageRow = false;
-	var classRow = false;
-	
-	
-	
-	$("#coverage").removeAttr("style");
-	
-	$('#coverage td.application').live( 'click', function () {
-			if(packageRow || classRow){
-				return false;
-			}
-		   var nTr = this.parentNode;
-		   parentRow = nTr;
-		   var i = $.inArray( nTr, anOpen );
-		    
-		   if ( i === -1 ) {
-		      $('img', this).attr( 'src', "../asset/image/details_close.png" );
-		      fnOpenNewRow( nTr, fnPackageDetails(oTable, nTr), 'details' );
-		      anOpen.push( nTr );
-		    }
-		    else {
-		      $('img', this).attr( 'src', "../asset/image/details_open.png" );
-		      fnCloseOpenedRow( nTr );
-		      anOpen.splice( i, 1 );
-		    }
-		} );
 		 
-		function fnPackageDetails( oTable, nTr )
+		function fnClazzesDetails( oTable, nTr )
 		{
 		
 		  var oData = oTable.fnGetData( nTr );
-		  var packages = oData.packages;
+		  var clazzes = oData.clazzes;
 		
 		  var myArray = [];
 		  var i= 0; 
-		  $.each(packages, function(key,value){
+		  $.each(clazzes, function(key,value){
 			  var sOut ='';
-			  sOut = sOut + '<td class="package center" style="background-color:#F9F9F9"><img src="../asset/image/details_open.png"></td>';
+			  sOut = sOut + '<td class="clazzes center" style="background-color:#F9F9F9"><img src="../asset/image/details_open.png"></td>';
 			  sOut = sOut + '<td id="id" align="center" style="display:none">'+value.id +'</td>';
 			  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.name +'</td>';
 			  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.coverage +'</td>';
@@ -145,7 +164,8 @@ $(document).ready(function() {
 		 return myArray;
 		}
 		
-		$('#coverage td.package').live( 'click', function () {
+		$('#coverage td.clazzes').live( 'click', function () {
+			
 			if(classRow){
 				return false;
 			}
@@ -157,7 +177,7 @@ $(document).ready(function() {
 		   if ( i === -1 ) {
 		      $('img', this).attr( 'src', "../asset/image/details_close.png" );
 		      packageRow = true;
-		      fnOpenNewRow( nTr, fnClassDetails(oTable, id), 'details' );
+		      fnOpenNewRow( nTr, fnMethodsDetails(oTable, id), 'details' );
 		      anOpen.push( nTr );
 		    }
 		    else {
@@ -168,18 +188,19 @@ $(document).ready(function() {
 		    }
 		});
 		
-		function fnClassDetails(oTable, id) {
+		function fnMethodsDetails(oTable, id) {
+			
 		  var oData = oTable.fnGetData( parentRow );
-		  var packages = oData.packages;
+		  var clazzes = oData.clazzes;
 		  var myArray = [];
 		  
-		  $.each(packages, function(key,value){
+		  $.each(clazzes, function(key,value){
 			if(value.id == id){
 				var i= 0; 
-				if(this.clazzes){
-					$.each(this.clazzes, function(key,value){
+				if(this.methods){
+					$.each(this.methods, function(key,value){
 					 var sOut ='';
-					 sOut = sOut + '<td class="classes" align="right" style="background-color:#EAEAEA"><img src="../asset/image/details_open.png"></td>';
+					 sOut = sOut + '<td class="classes" align="right" style="background-color:#EAEAEA"></td>';
 					 sOut = sOut + '<td id="id" align="center" style="display:none;background-color:#EAEAEA">'+value.id +'</td>';
 					 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.name +'</td>';
 					 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.coverage +'</td>';
@@ -197,85 +218,21 @@ $(document).ready(function() {
 		return myArray;
 		}
 		
-		
-		
-		$('#coverage td.classes').live( 'click', function () {
-			   
-			var nTr = this.parentNode;
-			var id = $(this).closest('td').next('td').html();    
-			var i = $.inArray( nTr, anOpen );
-			    
-		   if ( i === -1 ) {
-		      $('img', this).attr( 'src', "../asset/image/details_close.png" );
-		      classRow = true;
-		      fnOpenNewRow( nTr, fnMethodsDetails(oTable, id), 'details' );
-		      anOpen.push( nTr );
-		    }
-		    else {
-		      $('img', this).attr( 'src', "../asset/image/details_open.png" );
-		      classRow = false;
-		      fnCloseOpenedRow( nTr );
-		      anOpen.splice( i, 1 );
-		    }
-		});
-		
-		function fnMethodsDetails(oTable, id) {
-		  var oData = oTable.fnGetData( parentRow );
-		  var packages = oData.packages;
-		  var myArray = [];
-		  
-		  $.each(packages, function(key,value){
-			if(value.id == id){
-				if(this.clazzes){
-					$.each(this.clazzes, function(key,value){
-						if(value.id == id){
-							var i= 0; 
-							if(this.methods){
-								$.each(this.methods, function(key,value){
-								var sOut ='';
-								 sOut = sOut + '<td class="methods " style="background-color:#D6D6D6"></td>';
-								 sOut = sOut + '<td id="id" align="center" style="display:none;background-color:#D6D6D6">'+value.id +'</td>';
-								 sOut = sOut + '<td align="center" style="background-color:#D6D6D6">'+value.name +'</td>';
-								 sOut = sOut + '<td align="center" style="background-color:#D6D6D6">'+value.coverage +'</td>';
-								 sOut = sOut + '<td align="center" style="background-color:#D6D6D6">'+value.line +'</td>';
-								 sOut = sOut + '<td align="center" style="background-color:#D6D6D6">'+value.missedLine +'</td>';
-								 sOut = sOut + '<td align="center" style="background-color:#D6D6D6">'+value.branch +'</td>';
-								 sOut = sOut + '<td align="center" style="background-color:#D6D6D6">'+value.missedBranch +'</td>';
-								 myArray[i] = sOut;
-								 i++;
-								});
-							}	
-						}
-					});
-				}
-			}
-		  });
-			 
-		return myArray;
-		}
-		
-		
-		fnOpenNewRow = function(nTr, myArray, sClass )
-		{
+		fnOpenNewRow = function(nTr, myArray, sClass ) {
+			
 			var oSettings = oTable.fnSettings();
-			
 			oTable.fnClose( nTr );
-			
 			for ( var i in myArray ) {
 				var nNewRow = document.createElement("tr");
-				
-				if (typeof mHtml === "string")
-				{
+				if (typeof mHtml === "string"){
 					nNewRow.innerHTML = myArray[ i ];
 				}
-				else
-				{
+				else{
 					$(nNewRow).html( myArray[ i ] );
 				}
 			
 				var nTrs = $('tr', oSettings.nTBody);
-				if ( $.inArray(nTr, nTrs) != -1  )
-				{
+				if ( $.inArray(nTr, nTrs) != -1  ){
 					$(nNewRow).insertAfter(nTr);
 				}
 				
@@ -288,8 +245,8 @@ $(document).ready(function() {
 		};
 		
 		
-		fnCloseOpenedRow = function( nTr )
-		{
+		fnCloseOpenedRow = function( nTr ) {
+			
 			var oSettings = oTable.fnSettings();
 			var index = oSettings.aoOpenRows.length - 1;
 			for ( var i=index; i>=0 ; i-- )
@@ -307,5 +264,4 @@ $(document).ready(function() {
 			return 1;
 		};
 
-		
 });
