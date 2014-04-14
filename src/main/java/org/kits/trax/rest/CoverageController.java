@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.kits.trax.domain.Application;
+import org.kits.trax.domain.Package;
 import org.kits.trax.domain.TestType;
 import org.kits.trax.service.CoverageService;
 import org.kits.trax.util.DateUtil;
@@ -93,14 +94,14 @@ public class CoverageController {
 	        @PathVariable("testType") String testType, @PathVariable("timeStamp") String timeStamp)
 	        throws ParseException {
 
-		List<Application> applications = new ArrayList<Application>();
+		List<Package> applications = new ArrayList<Package>();
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		LOGGER.info("Coverages Summary for " + timeStamp);
 		Application result = coverageService.findApplication(name, TestType.valueOf(testType), DateUtil.toLong(timeStamp));
-		applications.add(result);
+		applications.addAll(result.getPackages());
 		Map info = new HashMap();
 		info.put("sEcho", 1);
 		info.put("iTotalRecords", 1);
