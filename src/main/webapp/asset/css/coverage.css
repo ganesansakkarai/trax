@@ -1,0 +1,59 @@
+body {
+	margin-top: 100px;
+	margin-left: 100px;
+	margin-right: 100px;
+}
+
+#selectTable {
+	padding-bottom: 30px; 
+	padding-top: 15px;
+}
+
+
+
+.clazzes .background{
+	background-color : #F9F9F9;	
+}
+
+.methods .background {
+	background-color: #EAEAEA;
+}
+.dataTables_info {
+	padding-top: 0;
+}
+
+.dataTables_paginate {
+	padding-top: 0;
+}
+
+.css_right {
+	float: right;
+}
+
+#coverage_wrapper .fg-toolbar {
+	font-size: 0.8em
+}
+
+#theme_links span {
+	float: left;
+	padding: 2px 10px;
+}
+
+#coverage_wrapper {
+	-webkit-box-shadow: 2px 2px 6px #666;
+	box-shadow: 2px 2px 6px #666;
+	border-radius: 5px;
+}
+
+#coverage tbody {
+	border-left: 1px solid #AAA;
+	border-right: 1px solid #AAA;
+}
+
+#coverage thead th:first-child {
+	border-left: 1px solid #AAA;
+}
+
+#coverage thead th:last-child {
+	border-right: 1px solid #AAA;
+}
