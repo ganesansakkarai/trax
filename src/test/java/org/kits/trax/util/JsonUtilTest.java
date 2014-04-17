@@ -3,8 +3,8 @@ package org.kits.trax.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class JsonUtilTest {
 

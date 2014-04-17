@@ -1,5 +1,6 @@
 package org.kits.trax.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,7 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Package {
+public class Packaze {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +28,12 @@ public class Package {
 	private double branch;
 	private double missedBranch;
 	private double coverage;
-	
+
+	public Packaze() {
+
+	    clazzes = new ArrayList<Clazz>();
+	}
+
 	public Long getId() {
 		return id;
 	}

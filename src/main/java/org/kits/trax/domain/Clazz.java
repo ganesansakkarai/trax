@@ -1,5 +1,6 @@
 package org.kits.trax.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,6 +28,11 @@ public class Clazz {
 	private double branch;
 	private double missedBranch;
 	private double coverage;
+
+	public Clazz() {
+
+	    methods = new ArrayList<Method>();
+	}
 
 	public String getName() {
 		return name;

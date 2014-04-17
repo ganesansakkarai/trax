@@ -15,17 +15,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Application {
+public class Module {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
-	private Long timeStamp;
-	private TestType testType;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "APP_MOD", joinColumns = @JoinColumn(name = "APP_ID"), inverseJoinColumns = @JoinColumn(name = "MOD_ID"))
-	private List<Module> modules;
+	@JoinTable(name = "MOD_PKG", joinColumns = @JoinColumn(name = "MOD_ID"), inverseJoinColumns = @JoinColumn(name = "PKG_ID"))
+	private List<Packaze> packazes;
 	private double line;
 	private double missedLine;
 	private double branch;
@@ -39,10 +37,13 @@ public class Application {
 	private Date startTime;
 	private Date endTime;
 	private long duration;
-
-	public Application() {
-
-		modules = new ArrayList<Module>();
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "MOD_SUITE", joinColumns = @JoinColumn(name = "MOD_ID"), inverseJoinColumns = @JoinColumn(name = "SUITE_ID"))
+	private List<TestSuite> testSuites;
+	
+	public Module() {		
+		packazes = new ArrayList<>();
+		testSuites = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -61,28 +62,12 @@ public class Application {
 		this.name = name;
 	}
 
-	public Long getTimeStamp() {
-		return timeStamp;
+	public List<Packaze> getPackazes() {
+		return packazes;
 	}
 
-	public void setTimeStamp(Long timeStamp) {
-		this.timeStamp = timeStamp;
-	}
-
-	public TestType getTestType() {
-		return testType;
-	}
-
-	public void setTestType(TestType testType) {
-		this.testType = testType;
-	}
-
-	public List<Module> getModules() {
-		return modules;
-	}
-
-	public void setMOdules(List<Module> modules) {
-		this.modules = modules;
+	public void setPackazes(List<Packaze> packazes) {
+		this.packazes = packazes;
 	}
 
 	public double getLine() {
@@ -181,7 +166,11 @@ public class Application {
 		this.duration = duration;
 	}
 
-	public void setModules(List<Module> modules) {
-		this.modules = modules;
+	public List<TestSuite> getTestSuites() {
+		return testSuites;
+	}
+
+	public void setTestSuites(List<TestSuite> testSuites) {
+		this.testSuites = testSuites;
 	}
 }

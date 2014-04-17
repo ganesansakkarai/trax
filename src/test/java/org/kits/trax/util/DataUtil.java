@@ -1,13 +1,12 @@
 package org.kits.trax.util;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.kits.trax.domain.Application;
 import org.kits.trax.domain.Clazz;
 import org.kits.trax.domain.Method;
-import org.kits.trax.domain.Package;
+import org.kits.trax.domain.Module;
+import org.kits.trax.domain.Packaze;
 import org.kits.trax.domain.TestType;
 
 public class DataUtil {
@@ -15,23 +14,22 @@ public class DataUtil {
 	public static Application build() {
 
 		Application app = new Application();
-		app.setName("Sample");
+		app.setName("sample");
 		app.setTimeStamp(new Date().getTime());
-		app.setTestType(TestType.Unit);
+		app.setTestType(TestType.UNIT);
 		
-		Package aPackage = new Package();
-		aPackage.setName("org.sample");
-		List<Package> packages = new ArrayList<Package>();
-		packages.add(aPackage);
-		app.setPackages(packages);
-				
+		Module module = new Module();
+		module.setName("sample.module");
+		app.getModules().add(module);
+
+		Packaze packaze = new Packaze();
+		packaze.setName("org.sample");
+		module.getPackazes().add(packaze);
+
 		Clazz clazz = new Clazz();
-		clazz.setName("Hello");
-		List<Clazz> classes = new ArrayList<Clazz>();
-		classes.add(clazz);
-		aPackage.setClazzes(classes);
-		
-		List<Method> methods = new ArrayList<Method>();
+		clazz.setName("Sample");
+		packaze.getClazzes().add(clazz);
+
 		for (int i = 0; i < 10; ++i) {
 			Method method = new Method();
 			method.setName("method" + i);
@@ -39,11 +37,8 @@ public class DataUtil {
 			method.setMissedLine(9);
 			method.setBranch(5);
 			method.setMissedBranch(4);
-			methods.add(method);
+			clazz.getMethods().add(method);
 		}
-		clazz.setMethods(methods);
-		
-		
 
 		return app;
 	}

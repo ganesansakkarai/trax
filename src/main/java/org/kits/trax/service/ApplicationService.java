@@ -5,7 +5,7 @@ import java.util.List;
 import org.kits.trax.domain.Application;
 import org.kits.trax.domain.TestType;
 
-public interface CoverageService {
+public interface ApplicationService {
 
 	public Application saveApplication(Application application);
 	

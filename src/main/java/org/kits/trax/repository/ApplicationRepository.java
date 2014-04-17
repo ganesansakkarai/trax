@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CoverageRepository  extends PagingAndSortingRepository<Application, Long> {
+public interface ApplicationRepository  extends PagingAndSortingRepository<Application, Long> {
 
 	Application findByTimeStampAndTestType(@Param("timeStamp") Long timeStamp, @Param("testType") TestType testType);
 	

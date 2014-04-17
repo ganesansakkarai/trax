@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.kits.trax.domain.Application;
-import org.kits.trax.domain.Package;
 import org.kits.trax.domain.TestType;
-import org.kits.trax.service.CoverageService;
+import org.kits.trax.service.ApplicationService;
 import org.kits.trax.util.DateUtil;
 import org.kits.trax.util.JsonUtil;
 import org.slf4j.Logger;
@@ -22,15 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CoverageController {
+public class ApplicationController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CoverageController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
 	@Autowired
-	private CoverageService coverageService;
+	private ApplicationService coverageService;
 
 	@RequestMapping(value = "/coverage/create", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> create(@RequestBody String json) {
@@ -53,7 +51,6 @@ public class CoverageController {
 	}
 
 	@RequestMapping(value = "/applications/{testType}", method = RequestMethod.POST, headers = "Accept=application/json")
-	@ResponseBody
 	public ResponseEntity<String> listApplications(@PathVariable("testType") String testType) {
 
 		ResponseEntity<String> response = null;
@@ -68,7 +65,6 @@ public class CoverageController {
 	}
 
 	@RequestMapping(value = "/builds/{name}/{testType}", method = RequestMethod.POST, headers = "Accept=application/json")
-	@ResponseBody
 	public ResponseEntity<String> listBuilds(@PathVariable("name") String name,
 	        @PathVariable("testType") String testType) {
 
@@ -86,27 +82,25 @@ public class CoverageController {
 
 		return response;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/coverage/summary/{name}/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
-	@ResponseBody
 	public ResponseEntity<String> coverageSummary(@PathVariable("name") String name,
 	        @PathVariable("testType") String testType, @PathVariable("timeStamp") String timeStamp)
 	        throws ParseException {
 
-		List<Package> applications = new ArrayList<Package>();
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		LOGGER.info("Coverages Summary for " + timeStamp);
-		Application result = coverageService.findApplication(name, TestType.valueOf(testType), DateUtil.toLong(timeStamp));
-		applications.addAll(result.getPackages());
+		Application result = coverageService.findApplication(name, TestType.valueOf(testType),
+		        DateUtil.toLong(timeStamp));
 		Map info = new HashMap();
 		info.put("sEcho", 1);
 		info.put("iTotalRecords", 1);
 		info.put("iTotalDisplayRecords", 1);
-		info.put("aaData", applications);
+		info.put("aaData", result.getModules());
 		String jsonData = JsonUtil.toJson(info);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
@@ -114,7 +108,6 @@ public class CoverageController {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/coverage/{name}/{testType}/{timeStamp}", method = RequestMethod.POST, headers = "Accept=application/json")
-	@ResponseBody
 	public ResponseEntity<String> findApplication(@PathVariable("name") String name,
 	        @PathVariable("testType") String testType, @PathVariable("timeStamp") String timeStamp)
 	        throws ParseException {
@@ -124,7 +117,8 @@ public class CoverageController {
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		LOGGER.info("Listing coverages for " + DateUtil.toLong(timeStamp));
-		Application result = coverageService.findApplication(name, TestType.valueOf(testType), DateUtil.toLong(timeStamp));
+		Application result = coverageService.findApplication(name, TestType.valueOf(testType),
+		        DateUtil.toLong(timeStamp));
 		Map info = new HashMap();
 		info.put("sEcho", 1);
 		info.put("iTotalRecords", 1);

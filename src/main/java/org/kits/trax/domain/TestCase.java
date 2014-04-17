@@ -8,17 +8,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class TestResult {
+public class TestCase {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
 	private TestStatus status;
-	private Date timeStamp;
 	private String log;
 	private Date startTime;
 	private Date endTime;
+	private long duration;
 
 	public Long getId() {
 		return id;
@@ -44,14 +44,6 @@ public class TestResult {
 		this.status = status;
 	}
 
-	public Date getTimeStamp() {
-		return timeStamp;
-	}
-
-	public void setTimeStamp(Date timeStamp) {
-		this.timeStamp = timeStamp;
-	}
-
 	public String getLog() {
 		return log;
 	}
@@ -74,5 +66,13 @@ public class TestResult {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 }
