@@ -1,38 +1,22 @@
 package org.kits.trax.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
 
 @Entity
-public class Packaze {
+public class Method {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JoinTable(name = "PKG_CLASS", joinColumns = @JoinColumn(name = "PKG_ID"), inverseJoinColumns = @JoinColumn(name = "CLASS_ID"))
-	private List<Clazz> clazzes;
 	private double line;
 	private double missedLine;
 	private double branch;
 	private double missedBranch;
 	private double coverage;
-
-	public Packaze() {
-
-	    clazzes = new ArrayList<Clazz>();
-	}
 
 	public Long getId() {
 		return id;
@@ -46,24 +30,16 @@ public class Packaze {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Clazz> getClazzes() {
-		return clazzes;
-	}
-
-	public void setClazzes(List<Clazz> clazzes) {
-		this.clazzes = clazzes;
+	public void setName(String methodName) {
+		this.name = methodName;
 	}
 
 	public double getLine() {
 		return line;
 	}
 
-	public void setLine(double line) {
-		this.line = line;
+	public void setLine(double coveredLine) {
+		this.line = coveredLine;
 	}
 
 	public double getMissedLine() {
@@ -78,8 +54,8 @@ public class Packaze {
 		return branch;
 	}
 
-	public void setBranch(double branch) {
-		this.branch = branch;
+	public void setBranch(double coveredBranch) {
+		this.branch = coveredBranch;
 	}
 
 	public double getMissedBranch() {

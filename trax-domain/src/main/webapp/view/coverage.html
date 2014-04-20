@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Unit Test Coverage</title>
+<link type="text/css" rel="stylesheet" href="../asset/css/coverage.css" />
+<link type="text/css" rel="stylesheet" href="../asset/css/demo_table_jui.css" />
+<link type="text/css" rel="stylesheet" href="../asset/themes/smoothness/jquery-ui-1.8.4.custom.css" />
+
+<script type="text/javascript" src="../asset/js/jquery.js"></script>
+<script type="text/javascript" src="../asset/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="../asset/js/coverage.js"></script>
+<script src="../asset/js/jquery-ui.min.js"></script>
+<script src="../asset/js/jquery.selectBoxIt.min.js"></script>
+
+</head>
+<body id="index">
+
+	<div id="testTabs">
+		<ul>
+			<li><a href="#unitTest">Unit Test</a></li>
+			<li><a href="#integrationTest">Integration Test</a></li>
+			<li><a href="#compare">Compare</a></li>
+		</ul>
+		<div id="unitTest">
+		<form>	
+			<table id="selectTable">
+				<tr>
+					<td style="width:30%">Application</td>
+					<td><select id="applicationType"></select></td>
+				</tr>
+				<tr>
+					<td style="width:30%">Build Time</td>
+					<td><select id="builds"></select></td>
+				</tr>
+			</table>		
+				
+			<table class="display" id="coverage" style="width: 100% !important;">
+				<thead>
+					<tr>
+						<th style="width: 73px;"></th>
+						<th id="id" style="display: none;">Id</th>
+						<th width="30%">Class</th>
+						<th width="10%">Coverage</th>
+						<th width="10%">Line Count</th>
+						<th width="10%">Missed Line</th>
+						<th width="10%">Branch Count</th>
+						<th width="10%">Missed Branch</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="5" class="dataTables_empty">Loading data from
+							server</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		</div>
+		<div id="integrationTest"></div>
+		<div id="compare"></div>
+	</div>
+
+</body>
+</html>

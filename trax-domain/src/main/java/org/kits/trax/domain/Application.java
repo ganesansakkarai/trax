@@ -1,5 +1,6 @@
 package org.kits.trax.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,12 +15,22 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 @Entity
-public class TestClass {
+public class Application {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
+	private Long timeStamp;
+	private TestType testType;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "APP_MOD", joinColumns = @JoinColumn(name = "APP_ID"), inverseJoinColumns = @JoinColumn(name = "MOD_ID"))
+	private List<Module> modules;
+	private double line;
+	private double missedLine;
+	private double branch;
+	private double missedBranch;
+	private double coverage;
 	private double pass;
 	private double fail;
 	private double skip;
@@ -27,9 +38,11 @@ public class TestClass {
 	private Date startTime;
 	private Date endTime;
 	private long duration;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "CLASS_TEST", joinColumns = @JoinColumn(name = "CLASS_ID"), inverseJoinColumns = @JoinColumn(name = "TEST_ID"))
-	private List<TestCase> testCases;
+
+	public Application() {
+
+		modules = new ArrayList<Module>();
+	}
 
 	public Long getId() {
 		return id;
@@ -45,6 +58,70 @@ public class TestClass {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Long getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(Long timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+	public TestType getTestType() {
+		return testType;
+	}
+
+	public void setTestType(TestType testType) {
+		this.testType = testType;
+	}
+
+	public List<Module> getModules() {
+		return modules;
+	}
+
+	public void setMOdules(List<Module> modules) {
+		this.modules = modules;
+	}
+
+	public double getLine() {
+		return line;
+	}
+
+	public void setLine(double line) {
+		this.line = line;
+	}
+
+	public double getMissedLine() {
+		return missedLine;
+	}
+
+	public void setMissedLine(double missedLine) {
+		this.missedLine = missedLine;
+	}
+
+	public double getBranch() {
+		return branch;
+	}
+
+	public void setBranch(double branch) {
+		this.branch = branch;
+	}
+
+	public double getMissedBranch() {
+		return missedBranch;
+	}
+
+	public void setMissedBranch(double missedBranch) {
+		this.missedBranch = missedBranch;
+	}
+
+	public double getCoverage() {
+		return coverage;
+	}
+
+	public void setCoverage(double coverage) {
+		this.coverage = coverage;
 	}
 
 	public double getPass() {
@@ -103,11 +180,7 @@ public class TestClass {
 		this.duration = duration;
 	}
 
-	public List<TestCase> getTestCases() {
-		return testCases;
-	}
-
-	public void setTestCases(List<TestCase> testCases) {
-		this.testCases = testCases;
+	public void setModules(List<Module> modules) {
+		this.modules = modules;
 	}
 }
