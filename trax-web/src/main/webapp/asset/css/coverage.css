@@ -58,7 +58,7 @@ body {
 The following lines are used to display naviage button.
 */
 
-ul{
+.toogleSwitchUL {
     list-style:none;
     width:50%;
     height:26px;
@@ -68,7 +68,7 @@ ul{
     margin-left: 328px;
 }
 
-ul li{
+.toogleSwitchUL li{
     float:left;
     line-height:23px;
     font-size:11px;
@@ -83,21 +83,21 @@ ul li{
     -webkit-box-shadow:0 1px 0 #FFF inset, 0 0 5px rgba(0, 0, 0, .1) inset, 0 1px 1px rgba(0, 0, 0, .3);
 }
 
-ul li:first-child{
+.toogleSwitchUL li:first-child{
     -webkit-border-radius:5px 0 0 5px;
 }
-ul li:last-child{
+.toogleSwitchUL li:last-child{
     -webkit-border-radius:0 5px 5px 0;
 }
 
-ul li a{
+.toogleSwitchUL li a{
     text-decoration: none;
     font-family:Helvetica, Arial;
     text-transform:uppercase;
     color:#a1a1a1;
 }
 
-.on{
+.toogleSwitchUL .on{
     background: #505050;
     background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#777), to(#505050));
     text-shadow:0 -1px 0 #444, 0 0 7px #9AE658;
@@ -107,12 +107,12 @@ ul li a{
     -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, .7) inset, 0 1px 0 #FFF;  
 }
 
-ul li:not(.on):active{
+.toogleSwitchUL li:not(.on):active{
     background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddd), to(#f1f1f1));
 }
 
 
-ul li.on a{
+.toogleSwitchUL li.on a{
     color:#7BBA47;
     cursor: default;
 }

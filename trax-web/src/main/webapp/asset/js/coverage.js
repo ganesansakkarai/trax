@@ -1,5 +1,15 @@
 $(document).ready(function() {
 	
+	$(function() {		
+
+		$("select").selectBoxIt({
+			showEffect : "fadeIn",
+			showEffectSpeed : 400,
+			hideEffect : "fadeOut",
+			hideEffectSpeed : 400
+		});
+	});
+	
 	var appListUrl = 'http://localhost:8080/applications/'
 	var buildUrl = 'http://localhost:8080/builds/'
 	var url = 'http://localhost:8080/coverage/summary/';
