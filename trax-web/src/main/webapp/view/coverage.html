@@ -18,23 +18,29 @@
 
 	<div id="testTabs">
 		<ul>
-			<li><a href="#unitTest">Unit Test</a></li>
-			<li><a href="#integrationTest">Integration Test</a></li>
-			<li><a href="#compare">Compare</a></li>
+	   		<li id="codeCoverage" class="on"><a href="#">Code Coverage</a></li>
+	    	<li id="testResults"><a href="#">Test Results</a></li>
 		</ul>
-		<div id="unitTest">
-		<form>	
-			<table id="selectTable">
-				<tr>
-					<td style="width:30%">Application</td>
-					<td><select id="applicationType"></select></td>
-				</tr>
-				<tr>
-					<td style="width:30%">Build Time</td>
-					<td><select id="builds"></select></td>
-				</tr>
-			</table>		
-				
+		<h4 id="title"></h4>
+		<table id="selectTable">
+			<tr>
+				<td style="width:30%">Application</td>
+				<td><select id="applicationType"></select></td>
+			</tr>
+			<tr>
+				<td style="width:30%">TestType</td>
+				<td>
+				<select id="applicationType">
+					<option>UNIT</option>
+					<option>INTEGRATION</option>
+					<option>PERFORMANCE</option></select></td>
+			</tr>
+			<tr>
+				<td style="width:30%">Build Time</td>
+				<td><select id="builds"></select></td>
+			</tr>
+		</table>		
+		<div id="coverageTabs">	
 			<table class="display" id="coverage" style="width: 100% !important;">
 				<thead>
 					<tr>
@@ -55,11 +61,31 @@
 					</tr>
 				</tbody>
 			</table>
-		</form>
 		</div>
-		<div id="integrationTest"></div>
-		<div id="compare"></div>
+		<div id="testResultTabs">	
+			<table class="display" id="testResult" style="width: 100% !important;">
+				<thead>
+					<tr>
+						<th style="width: 73px;"></th>
+						<th id="id" style="display: none;">Id</th>
+						<th width="30%">Name</th>
+						<th width="10%">Duration</th>
+						<th width="10%">Pass</th>
+						<th width="10%">Fail</th>
+						<th width="10%">Skip</th>
+						<th width="10%">Success</th>
+						<th width="10%">Start Time</th>
+						<th width="10%">End Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="5" class="dataTables_empty">Loading data from
+							server</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
-
 </body>
 </html>
