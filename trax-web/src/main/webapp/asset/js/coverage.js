@@ -1,14 +1,4 @@
-$(document).ready(function() {
-	
-	$(function() {		
-
-		$("select").selectBoxIt({
-			showEffect : "fadeIn",
-			showEffectSpeed : 400,
-			hideEffect : "fadeOut",
-			hideEffectSpeed : 400
-		});
-	});
+$(document).ready(function() {	
 	
 	var appListUrl = 'http://localhost:8080/applications/'
 	var buildUrl = 'http://localhost:8080/builds/'
@@ -26,6 +16,16 @@ $(document).ready(function() {
 	var testResultParentRow;
 	var testResultPackageRow = false;
 	var testResultClassRow = false;
+	
+	$(function() {
+		
+		$("select").selectBoxIt({
+			showEffect : "fadeIn",
+			showEffectSpeed : 400,
+			hideEffect : "fadeOut",
+			hideEffectSpeed : 400
+		});
+	});
 	
 	$(function(){
 		
