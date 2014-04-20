@@ -6,7 +6,7 @@ $(document).ready(function() {
 	var buildUrl = 'http://localhost:8080/builds/'
 	var selectedApp;
 	var selectedBuild;
-	var testType = 'Unit';	
+	var testType = 'UNIT';	
 	var anOpen = [];
 	var parentRow;
 	var packageRow = false;
