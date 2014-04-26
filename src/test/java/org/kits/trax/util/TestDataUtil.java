@@ -10,16 +10,32 @@ import org.kits.trax.domain.TestCoverage;
 import org.kits.trax.domain.TestResult;
 import org.kits.trax.domain.TestStatus;
 import org.kits.trax.domain.TestSuite;
+import org.kits.trax.domain.TestType;
 
-public class DataUtil {	
+public class TestDataUtil {
+	
+	public static Build getRootBuild() {
 
-	public static Build build() {
+		Build build = new Build();
+		build.setName("root");
+		build.setTimeStamp(new Date());		
+		return build;
+	}
+	
+	public static Build getModuleBuild() {
 
 		Build build = new Build();
 		build.setName("sample");
 		build.setTimeStamp(new Date());
+		build.getTestCoverages().add(getTestCoverage());
+		build.getTestResults().add(getTestResult());
+		return build;
+	}
+	
+	public static TestCoverage getTestCoverage() {
+		
 		TestCoverage coverage = new TestCoverage();
-		build.getTestCoverages().add(coverage);
+		coverage.setTestType(TestType.UNIT);
 		
 		Clazz clazz = new Clazz();
 		clazz.setName("Sample");
@@ -35,8 +51,13 @@ public class DataUtil {
 			clazz.getMethods().add(method);
 		}
 		
+		return coverage;
+	}
+	
+	public static TestResult getTestResult() {
+		
 		TestResult testResult = new TestResult();
-		build.getTestResults().add(testResult);
+		testResult.setTestType(TestType.UNIT);
 		
 		TestSuite testSuite = new TestSuite();
 		testSuite.setName("Sample");
@@ -51,6 +72,6 @@ public class DataUtil {
 			testSuite.getTestCases().add(testCase);
 		}
 		
-		return build;
+		return testResult;
 	}
 }

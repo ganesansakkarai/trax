@@ -63,9 +63,9 @@ public class BuildServiceImpl implements BuildService {
 
 		return buildRepository.listBuilds(name);
 	}
-	
+
 	public List<Build> listModules(Long id) {
-		
+
 		return buildRepository.listModules(id);
 	}
 
@@ -77,6 +77,14 @@ public class BuildServiceImpl implements BuildService {
 	public void deleteBuild(Long id) {
 
 		Build build = buildRepository.findOne(id);
+		List<Build> modules = buildRepository.listModules(id);
+
+		for (Build module : modules) {
+			if (module.getId() != build.getId()) {
+				buildRepository.delete(module);
+			}
+		}
+
 		buildRepository.delete(build);
 	}
 
@@ -98,7 +106,8 @@ public class BuildServiceImpl implements BuildService {
 			clazz.setCoverage(((clazz.getLine() - clazz.getMissedLine()) / clazz.getLine()) * 100);
 		}
 
-		testCoverage.setCoverage(((testCoverage.getLine() - testCoverage.getMissedLine()) / testCoverage.getLine()) * 100);
+		testCoverage
+		        .setCoverage(((testCoverage.getLine() - testCoverage.getMissedLine()) / testCoverage.getLine()) * 100);
 	}
 
 	private void processTestResult(TestResult testResult) {
@@ -127,9 +136,11 @@ public class BuildServiceImpl implements BuildService {
 			testResult.setFail(testResult.getFail() + testSuite.getFail());
 			testResult.setSkip(testResult.getSkip() + testSuite.getSkip());
 			testResult.setDuration(testResult.getDuration() + testSuite.getDuration());
-			testSuite.setSuccess(testSuite.getPass() / (testSuite.getPass() + testSuite.getFail() + testSuite.getSkip()) * 100);
+			testSuite.setSuccess(testSuite.getPass()
+			        / (testSuite.getPass() + testSuite.getFail() + testSuite.getSkip()) * 100);
 		}
 
-		testResult.setSuccess(testResult.getPass() / (testResult.getPass() + testResult.getFail() + testResult.getSkip()) * 100);
+		testResult.setSuccess(testResult.getPass()
+		        / (testResult.getPass() + testResult.getFail() + testResult.getSkip()) * 100);
 	}
 }

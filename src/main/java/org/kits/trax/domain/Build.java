@@ -36,6 +36,12 @@ public class Build {
 		testResults = new ArrayList<>();
 		testCoverages = new ArrayList<>();
 	}
+	
+	public Build(Long id, String name, Date timeStamp) {
+		this.id = id;
+		this.name = name;
+		this.timeStamp = timeStamp;
+	}
 
 	public Long getId() {
 		return id;
@@ -83,5 +89,9 @@ public class Build {
 
 	public void setTestCoverages(List<TestCoverage> testCoverages) {
 		this.testCoverages = testCoverages;
+	}
+	
+	public String toString() {
+		return String.valueOf(id);
 	}
 }

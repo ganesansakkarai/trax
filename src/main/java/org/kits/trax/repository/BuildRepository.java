@@ -14,9 +14,9 @@ public interface BuildRepository extends PagingAndSortingRepository<Build, Long>
 	@Query("select distinct b.name from Build b where b.parent is null")
 	public List<String> listApplications();
 
-	@Query("select b from Build b where b.name = :name and b.parent is null")
+	@Query("select new org.kits.trax.domain.Build(b.id, b.name, b.timeStamp) from Build b where b.name = :name and b.parent is null")
 	public List<Build> listBuilds(@Param("name") String name);
 	
-	@Query("select b from Build b where b.parent.id = :id")
+	@Query("select b from Build b where b.parent.id = :id or b.id = :id")
 	public List<Build> listModules(@Param("id") Long id);
 }

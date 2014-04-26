@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.kits.trax.domain.Build;
+import org.kits.trax.domain.TestCoverage;
+import org.kits.trax.domain.TestResult;
+import org.kits.trax.domain.TestType;
 import org.kits.trax.service.BuildService;
 import org.kits.trax.util.JsonUtil;
 import org.slf4j.Logger;
@@ -131,6 +134,60 @@ public class BuildController {
 			response = new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
 
+		return response;
+	}
+
+	@RequestMapping(value = "/build/{id}/coverage/{type}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> coverageSummary(@PathVariable("id") Long id, @PathVariable("type") String type) {
+
+		ResponseEntity<String> response = null;
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+
+		TestType testType = TestType.valueOf(type);
+		List<Build> modules = buildService.listModules(id);
+		TestCoverage overall = new TestCoverage();
+		for (Build module : modules) {
+			for (TestCoverage coverage : module.getTestCoverages()) {
+				if(coverage.getTestType() == testType) {
+					overall.setCoverage(overall.getCoverage() + coverage.getCoverage());
+					overall.setLine(overall.getLine() + coverage.getLine());
+					overall.setMissedLine(overall.getMissedLine() + coverage.getLine());
+					overall.setBranch(overall.getBranch() + coverage.getBranch());
+					overall.setMissedBranch(overall.getMissedBranch() + coverage.getMissedBranch());
+				}
+			}
+		}
+
+		String jsonData = JsonUtil.toJson(overall);
+		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
+		return response;
+	}
+
+	@RequestMapping(value = "/build/{id}/result/{name}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> resultSummary(@PathVariable("id") Long id, @PathVariable("name") String name) {
+
+		ResponseEntity<String> response = null;
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+
+		TestType testType = TestType.valueOf(name);
+		List<Build> modules = buildService.listModules(id);
+		TestResult overall = new TestResult();
+		for (Build module : modules) {
+			for (TestResult result : module.getTestResults()) {
+				if(result.getTestType() == testType) {
+					overall.setDuration(overall.getDuration() + result.getDuration());
+					overall.setPass(overall.getPass() + result.getPass());
+					overall.setFail(overall.getFail() + result.getFail());
+					overall.setSkip(overall.getSkip() + result.getSkip());
+					overall.setSuccess(overall.getSuccess() + result.getSuccess());
+				}
+			}
+		}
+		
+		String jsonData = JsonUtil.toJson(overall);
+		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
 }
