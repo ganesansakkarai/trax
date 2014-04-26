@@ -1,5 +1,6 @@
 package org.kits.trax.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -7,11 +8,8 @@ import org.apache.http.HttpResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kits.trax.domain.Application;
 import org.kits.trax.domain.Build;
-import org.kits.trax.domain.Module;
 import org.kits.trax.util.DataUtil;
-import org.kits.trax.util.DateUtil;
 import org.kits.trax.util.HttpUtil;
 import org.kits.trax.util.JsonUtil;
 import org.slf4j.Logger;
@@ -27,46 +25,46 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 @IntegrationTest
 @DirtiesContext
-public class ApplicationControllerIT {
+public class BuildControllerIT {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationControllerIT.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BuildControllerIT.class);
 	private static final String url = "http://localhost:8080/";
 
 	private Build build() throws Exception {
 
-		Build build = DataUtil.build();
-		String jsonData = JsonUtil.toJson(build);
-		HttpResponse response = HttpUtil.post(url + "app/sample/build", jsonData);
+		Build root = new Build();
+		root.setName("root");
+		root.setTimeStamp(new Date());
+		String jsonData = JsonUtil.toJson(root);
+		HttpResponse response = HttpUtil.post(url + "build", jsonData);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
 		LOGGER.info("Response: " + jsonData);
-		build = JsonUtil.fromJson(Build.class, jsonData);
-		return build;
+		root = JsonUtil.fromJson(Build.class, jsonData);
+		return root;
 	}
 
 	@Test
-	public void createBuild() throws Exception {
+	public void saveBuild() throws Exception {
 
 		Build build = DataUtil.build();
 		String jsonData = JsonUtil.toJson(build);
-		HttpResponse response = HttpUtil.post(url + "app/sample/build", jsonData);
+		HttpResponse response = HttpUtil.post(url + "build", jsonData);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
 		build = JsonUtil.fromJson(Build.class, jsonData);
 		Assert.assertNotNull(build.getId());
-		Assert.assertEquals(build.getApplication().getName(), "sample");
 	}
 
 	@Test
-	public void createModule() throws Exception {
+	public void SaveModule() throws Exception {
 
-		Build build = build();
-
-		Module module = DataUtil.buildModule();
+		Build root = build();
+		Build module = DataUtil.build();
+		module.setParent(root);
 		String jsonData = JsonUtil.toJson(module);
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/module/", jsonData);
+		HttpResponse response = HttpUtil.post(url + "build/" + root.getId() + "/module", jsonData);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
-		module = JsonUtil.fromJson(Module.class, jsonData);
+		module = JsonUtil.fromJson(Build.class, jsonData);
 		Assert.assertNotNull(module.getId());
-		Assert.assertEquals(build.getId(), module.getBuild().getId());
 	}
 
 	@Test
@@ -77,7 +75,7 @@ public class ApplicationControllerIT {
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
-		List<Application> data = JsonUtil.fromJsonArray(Application.class, jsonData);
+		List<String> data = JsonUtil.fromJsonArray(String.class, jsonData);
 		Assert.assertTrue(data.size() > 0);
 	}
 
@@ -85,19 +83,19 @@ public class ApplicationControllerIT {
 	public void listBuilds() throws Exception {
 
 		Build build = build();
-		HttpResponse response = HttpUtil.post(url + "builds/" + build.getApplication().getId() + "/0/");
+		HttpResponse response = HttpUtil.post(url + "app/" + build.getName() + "/builds");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
-		List<String> data = JsonUtil.fromJsonArray(String.class, jsonData);
+		List<Build> data = JsonUtil.fromJsonArray(Build.class, jsonData);
 		Assert.assertTrue(data.size() > 0);
 	}
 
 	@Test
-	public void findBuild() throws Exception {
+	public void listModules() throws Exception {
 
 		Build build = build();
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/modules");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -108,7 +106,7 @@ public class ApplicationControllerIT {
 	public void delete() throws Exception {
 
 		Build build = build();
-		HttpResponse response = HttpUtil.post(url + "/build/delete/" + build.getId() + "/");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/delete");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 	}

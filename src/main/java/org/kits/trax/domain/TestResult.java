@@ -12,23 +12,30 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class TestSuite {
+public class TestResult {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String name;
+	private TestType testType;
 	private double pass;
 	private double fail;
 	private double skip;
 	private double success;
 	private double duration;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<TestCase> testCases;
+	private List<TestSuite> testSuites;
 
-	public TestSuite() {
+	public TestResult() {
+		testSuites = new ArrayList<>();
+	}
+	
+	public TestType getTestType() {
+		return testType;
+	}
 
-		testCases = new ArrayList<TestCase>();
+	public void setTestType(TestType testType) {
+		this.testType = testType;
 	}
 
 	public Long getId() {
@@ -37,14 +44,6 @@ public class TestSuite {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public double getPass() {
@@ -87,11 +86,11 @@ public class TestSuite {
 		this.duration = duration;
 	}
 
-	public List<TestCase> getTestCases() {
-		return testCases;
+	public List<TestSuite> getTestSuites() {
+		return testSuites;
 	}
 
-	public void setTestCases(List<TestCase> testCases) {
-		this.testCases = testCases;
+	public void setTestSuites(List<TestSuite> testSuites) {
+		this.testSuites = testSuites;
 	}
 }

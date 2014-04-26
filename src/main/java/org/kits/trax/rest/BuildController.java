@@ -5,11 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kits.trax.domain.Application;
 import org.kits.trax.domain.Build;
-import org.kits.trax.domain.Module;
-import org.kits.trax.domain.TestType;
-import org.kits.trax.service.ApplicationService;
+import org.kits.trax.service.BuildService;
 import org.kits.trax.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +21,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ApplicationController {
+public class BuildController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BuildController.class);
 	@Autowired
-	private ApplicationService applicationService;
+	private BuildService buildService;
 
-	@RequestMapping(value = "/app/{name}/build", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> createBuild(@PathVariable("name") String name, @RequestBody String json) {
+	@RequestMapping(value = "/build", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> saveBuild(@RequestBody String json) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
@@ -39,7 +36,7 @@ public class ApplicationController {
 
 		try {
 			Build build = JsonUtil.fromJson(Build.class, json);
-			build = applicationService.saveBuild(name, build);
+			build = buildService.saveBuild(build);
 			String jsonData = JsonUtil.toJson(build);
 			response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		} catch (Exception e) {
@@ -51,16 +48,16 @@ public class ApplicationController {
 	}
 
 	@RequestMapping(value = "/build/{id}/module", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> createModule(@PathVariable Long id, @RequestBody String json) {
+	public ResponseEntity<String> saveModule(@PathVariable Long id, @RequestBody String json) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json");
 
 		try {
-			Module module = JsonUtil.fromJson(Module.class, json);
-			module = applicationService.saveModule(id, module);
-			String jsonData = JsonUtil.toJson(module);
+			Build build = JsonUtil.fromJson(Build.class, json);
+			build = buildService.saveModule(id, build);
+			String jsonData = JsonUtil.toJson(build);
 			response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("Error adding applications", e);
@@ -70,44 +67,43 @@ public class ApplicationController {
 		return response;
 	}
 
-	@RequestMapping(value = "/apps/", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/apps", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> listApplications() {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		List<Application> result = applicationService.listApplications();
+		List<String> result = buildService.listApplications();
 		String jsonData = JsonUtil.toJsonArray(result);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 
 		return response;
 	}
 
-	@RequestMapping(value = "/builds/{id}/{testType}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> listBuilds(@PathVariable("id") Long id, @PathVariable("testType") int testType) {
+	@RequestMapping(value = "/app/{name}/builds", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> listBuilds(@PathVariable("name") String name) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		List<Build> result = applicationService.listBuilds(id, TestType.values()[testType]);
-		String jsonData = JsonUtil.toJson(result);
+		List<Build> result = buildService.listBuilds(name);
+		String jsonData = JsonUtil.toJsonArray(result);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
-
 		return response;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/build/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> findBuild(@PathVariable("id") Long id) throws ParseException {
+	@RequestMapping(value = "/build/{id}/modules", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> listModules(@PathVariable("id") Long id) throws ParseException {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		LOGGER.info("Listing applications for " + id);
-		Build result = applicationService.findBuild(id);
+		LOGGER.info("Listing modules for build " + id);
+		List<Build> result = buildService.listModules(id);
 		Map info = new HashMap();
 		info.put("sEcho", 1);
 		info.put("iTotalRecords", 1);
@@ -119,7 +115,7 @@ public class ApplicationController {
 		return response;
 	}
 
-	@RequestMapping(value = "/build/delete/{id}/", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/build/{id}/delete", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteBuild(@PathVariable("id") Long id) {
 
 		ResponseEntity<String> response = null;
@@ -128,7 +124,7 @@ public class ApplicationController {
 
 		try {
 			LOGGER.info("Deleting Build for " + id);
-			applicationService.deleteBuild(id);
+			buildService.deleteBuild(id);
 			response = new ResponseEntity<String>(headers, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("Error Deleting application :", e);
