@@ -98,15 +98,17 @@ public class BuildController {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/build/{id}/modules", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> listModules(@PathVariable("id") Long id) throws ParseException {
+	@RequestMapping(value = "/build/{id}/modules/{type}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> listModules(@PathVariable("id") Long id, @PathVariable("type") String type)
+	        throws ParseException {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		LOGGER.info("Listing modules for build " + id);
-		List<Build> result = buildService.listModules(id);
+		LOGGER.info("Listing modules for build " + id + ", " + type);
+		TestType testType = TestType.valueOf(type);
+		List<Build> result = buildService.listModules(id, testType);
 		Map info = new HashMap();
 		info.put("sEcho", 1);
 		info.put("iTotalRecords", 1);
@@ -145,12 +147,12 @@ public class BuildController {
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		TestType testType = TestType.valueOf(type);
-		List<Build> modules = buildService.listModules(id);
+		List<Build> modules = buildService.listModules(id, testType);
 		TestCoverage overall = new TestCoverage();
 		overall.setTestType(testType);
 		for (Build module : modules) {
 			for (TestCoverage coverage : module.getTestCoverages()) {
-				if(coverage.getTestType() == testType) {
+				if (coverage.getTestType() == testType) {
 					overall.setCoverage(overall.getCoverage() + coverage.getCoverage());
 					overall.setLine(overall.getLine() + coverage.getLine());
 					overall.setMissedLine(overall.getMissedLine() + coverage.getLine());
@@ -165,20 +167,20 @@ public class BuildController {
 		return response;
 	}
 
-	@RequestMapping(value = "/build/{id}/result/{name}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> resultSummary(@PathVariable("id") Long id, @PathVariable("name") String name) {
+	@RequestMapping(value = "/build/{id}/result/{type}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> resultSummary(@PathVariable("id") Long id, @PathVariable("type") String type) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		TestType testType = TestType.valueOf(name);
-		List<Build> modules = buildService.listModules(id);
+		TestType testType = TestType.valueOf(type);
+		List<Build> modules = buildService.listModules(id, testType);
 		TestResult overall = new TestResult();
 		overall.setTestType(testType);
 		for (Build module : modules) {
 			for (TestResult result : module.getTestResults()) {
-				if(result.getTestType() == testType) {
+				if (result.getTestType() == testType) {
 					overall.setDuration(overall.getDuration() + result.getDuration());
 					overall.setPass(overall.getPass() + result.getPass());
 					overall.setFail(overall.getFail() + result.getFail());
@@ -187,7 +189,7 @@ public class BuildController {
 				}
 			}
 		}
-		
+
 		String jsonData = JsonUtil.toJson(overall);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;

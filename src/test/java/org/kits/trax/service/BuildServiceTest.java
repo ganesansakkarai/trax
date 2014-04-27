@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kits.trax.domain.Build;
+import org.kits.trax.domain.TestType;
 import org.kits.trax.util.TestDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -58,7 +59,7 @@ public class BuildServiceTest {
 		root = buildService.saveBuild(root);
 		Build build = TestDataUtil.getModuleBuild();
 		build = buildService.saveModule(root.getId(), build);
-		List<Build> builds = buildService.listModules(root.getId());
+		List<Build> builds = buildService.listModules(root.getId(), TestType.UNIT);
 		Assert.assertNotNull(builds);
 	}
 

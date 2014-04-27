@@ -107,7 +107,7 @@ public class BuildControllerIT {
 	public void listModules() throws Exception {
 
 		Build build = saveChildModuleBuild();
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/modules");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/modules/UNIT");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
