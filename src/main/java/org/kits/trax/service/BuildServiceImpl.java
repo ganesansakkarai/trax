@@ -66,7 +66,16 @@ public class BuildServiceImpl implements BuildService {
 
 	public List<Build> listModules(Long id) {
 
-		return buildRepository.listModules(id);
+		List<Build> modules = buildRepository.listModules(id);
+		if (modules.size() > 1) {
+			for (Build module : modules) {
+				if (module.getId().equals(id)) {
+					modules.remove(module);
+				}
+			}
+		}
+
+		return modules;
 	}
 
 	public Build findBuild(Long id) {

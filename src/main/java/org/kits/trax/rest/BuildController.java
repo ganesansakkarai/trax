@@ -147,6 +147,7 @@ public class BuildController {
 		TestType testType = TestType.valueOf(type);
 		List<Build> modules = buildService.listModules(id);
 		TestCoverage overall = new TestCoverage();
+		overall.setTestType(testType);
 		for (Build module : modules) {
 			for (TestCoverage coverage : module.getTestCoverages()) {
 				if(coverage.getTestType() == testType) {
@@ -174,6 +175,7 @@ public class BuildController {
 		TestType testType = TestType.valueOf(name);
 		List<Build> modules = buildService.listModules(id);
 		TestResult overall = new TestResult();
+		overall.setTestType(testType);
 		for (Build module : modules) {
 			for (TestResult result : module.getTestResults()) {
 				if(result.getTestType() == testType) {
