@@ -29,16 +29,16 @@
 				<td><select id="applicationType"></select></td>
 			</tr>
 			<tr>
+				<td style="width:30%">Build Time</td>
+				<td><select id="builds"></select></td>
+			</tr>
+			<tr>
 				<td style="width:30%">TestType</td>
 				<td>
-				<select id="applicationType">
+				<select id="testType">
 					<option>UNIT</option>
 					<option>INTEGRATION</option>
 					<option>PERFORMANCE</option></select></td>
-			</tr>
-			<tr>
-				<td style="width:30%">Build Time</td>
-				<td><select id="builds"></select></td>
 			</tr>
 		</table>		
 		<div id="coverageTabs">	
@@ -47,7 +47,7 @@
 					<tr>
 						<th style="width: 73px;"></th>
 						<th id="id" style="display: none;">Id</th>
-						<th width="30%">Class</th>
+						<th width="30%">Name</th>
 						<th width="10%">Coverage</th>
 						<th width="10%">Line Count</th>
 						<th width="10%">Missed Line</th>
@@ -75,8 +75,6 @@
 						<th width="10%">Fail</th>
 						<th width="10%">Skip</th>
 						<th width="10%">Success</th>
-						<th width="10%">Start Time</th>
-						<th width="10%">End Time</th>
 					</tr>
 				</thead>
 				<tbody>
