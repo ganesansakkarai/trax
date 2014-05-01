@@ -1,8 +1,8 @@
 $(document).ready(function() {	
 	
-	var appListUrl = 'http://localhost:8080/applications/'
-	var buildUrl = 'http://localhost:8080/builds/'
-	var url = 'http://localhost:8080/coverage/summary/';
+	var appListUrl = 'http://localhost:8080/apps/'
+	var buildUrl = 'http://localhost:8080/app/'
+	var url = 'http://localhost:8080/build/';
 	var selectedApp;
 	var selectedBuild;
 	var testType = 'UNIT';
@@ -33,31 +33,29 @@ $(document).ready(function() {
 		$("#coverageTabs").removeClass("hide");
 		$("#testResultTabs").addClass("hide"); 
 		
-	    $("ul li").click(function(){
-	        $("ul li").removeClass("on");
-	        $(this).addClass("on");
-	        showHide($(this).attr("id"));
+	    $("#codeCoverage").click(function(){
+	    	$("#title").html("Code Coverage Summary")
+			$("#coverageTabs").removeClass("hide");
+			$("#testResultTabs").addClass("hide"); 
+			$("#codeCoverage").addClass("on"); 
+			$("#testResults").removeClass("on"); 
+	    });
+	    
+	    $("#testResults").click(function(){
+	    	$("#title").html("Test Result Summary")
+			$("#testResultTabs").removeClass("hide");
+			$("#coverageTabs").addClass("hide"); 
+			$("#codeCoverage").removeClass("on"); 
+			$("#testResults").addClass("on"); 
 	    });
 	});
 	
-	function showHide(id){
-		
-		if(id=='codeCoverage'){
-			$("#title").html("Code Coverage Summary")
-			$("#coverageTabs").removeClass("hide");
-			$("#testResultTabs").addClass("hide"); 
-		} else {
-			$("#title").html("Test Result Summary")
-			$("#testResultTabs").removeClass("hide");
-			$("#coverageTabs").addClass("hide"); 
-		}
-	}
 
 	$.ajax({
 		dataType : "json",
 		type : 'POST',
-		async : false,
-		url : appListUrl + testType,
+		async : false ,
+		url : appListUrl ,
 		success : function(responseObject) {
 			var applications = $("#applicationType");
 			applications.empty();
@@ -90,13 +88,13 @@ $(document).ready(function() {
 			dataType : "json",
 			type : 'POST',
 			async : false,
-			url : buildUrl + selectedApp + '/' + testType,
+			url : buildUrl + selectedApp + '/' + 'builds',
 			success : function(responseObject) {
 				var builds = $("#builds");
 				builds.empty();
 				$.each(responseObject, function(index, value) {
-					builds.append('<option value="' + value + '">'
-							+ value + '</option>');
+					builds.append('<option value="' + value.id + '">'
+							+ value.name + '</option>');
 				});
 
 				if (selectedBuild == undefined) {
@@ -111,7 +109,7 @@ $(document).ready(function() {
 	$("#builds").change(function() {
 
 		$("#builds option:selected").each(function() {
-			selectedBuild = $(this).text();
+			selectedBuild = $(this).val();
 			refreshCoverage();
 			refreshTestResults();
 		});
@@ -168,7 +166,7 @@ $(document).ready(function() {
 			"bDestroy": true,
 			"bPaginate" : false,
 			"bServerSide" : true,
-			"sAjaxSource" :  url + selectedApp + '/' + testType + '/' + selectedBuild,
+			"sAjaxSource" :  url + selectedBuild + '/coverage/' + testType ,
 			"sServerMethod" : "POST",
 			"aoColumns" : [ 
 			{
@@ -176,12 +174,12 @@ $(document).ready(function() {
 			     "sClass": "coveragePackage left",
 			     "sDefaultContent": '<img src="../asset/image/details_open.png">',
 			     "sWidth": "10%"
-			},
-			{
+			}, {
 				"mData" : "id"
-			},
-			{
-				"mData" : "name"
+			}, {
+			     "mDataProp": null,
+			     "sClass": "testResultPackage left",
+			     "sDefaultContent": ''
 			}, {
 				"mData" : "coverage"
 			}, {
@@ -199,52 +197,6 @@ $(document).ready(function() {
 		});
 		
 		$("#coverage").removeAttr("style");
-	}
-	
-	
-	function refreshTestResults() {
-		
-		testResultPackageRow = false;
-		testResultClassRow = false;
-		
-		testResultTable = $('#testResult').dataTable({
-			"bJQueryUI" : true,
-			"bDestroy": true,
-			"bPaginate" : false,
-			"bServerSide" : true,
-			"sAjaxSource" :  url + selectedApp + '/' + testType + '/' + selectedBuild,
-			"sServerMethod" : "POST",
-			"aoColumns" : [ 
-			{
-			     "mDataProp": null,
-			     "sClass": "testResultPackage left",
-			     "sDefaultContent": '<img src="../asset/image/details_open.png">',
-			     "sWidth": "10%"
-			},{
-				"mData" : "id"
-			},{
-				"mData" : "name"
-			},{
-				"mData" : "duration"
-			},{
-				"mData" : "pass"
-			}, {
-				"mData" : "fail"
-			}, {
-				"mData" : "skip"
-			}, {
-				"mData" : "success"
-			}, {
-				"mData" : "startTime"
-			},{
-				"mData" : "endTime"
-			}],
-			"aoColumnDefs" : [ 
-			          {"sClass" : "center","aTargets" : [2,3,4,5,6,7]},
-			          { "bVisible": false, "aTargets": [ 1 ] }]
-		});
-		
-		$("#testResult").removeAttr("style");
 	}
 	
 	$('#coverage td.coveragePackage').live( 'click', function () {
@@ -348,6 +300,49 @@ $(document).ready(function() {
 	}
 	
 	
+	function refreshTestResults() {
+		
+		testResultPackageRow = false;
+		testResultClassRow = false;
+		
+		testResultTable = $('#testResult').dataTable({
+			"bJQueryUI" : true,
+			"bDestroy": true,
+			"bPaginate" : false,
+			"bServerSide" : true,
+			"sAjaxSource" :  url + selectedBuild + '/result/' + testType ,
+			"sServerMethod" : "POST",
+			"aoColumns" : [ 
+			{
+			     "mDataProp": null,
+			     "sClass": "testResultPackage left",
+			     "sDefaultContent": '<img src="../asset/image/details_open.png">',
+			     "sWidth": "10%"
+			},{
+				"mData" : "id"
+			},{
+			     "mDataProp": null,
+			     "sClass": "testResultPackage left",
+			     "sDefaultContent": ''
+			},{
+				"mData" : "duration"
+			},{
+				"mData" : "pass"
+			}, {
+				"mData" : "fail"
+			}, {
+				"mData" : "skip"
+			}, {
+				"mData" : "success"
+			}],
+			"aoColumnDefs" : [ 
+			          {"sClass" : "center","aTargets" : [2,3,4,5,6,7]},
+			          { "bVisible": false, "aTargets": [ 1 ] }]
+		});
+		
+		$("#testResult").removeAttr("style");
+	}
+	
 	$('#testResult td.testResultPackage').live( 'click', function () {
 		
 		if(testResultPackageRow || testResultClassRow){
@@ -387,8 +382,6 @@ $(document).ready(function() {
 		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.fail +'</td>';
 		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.skip +'</td>';
 		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.success +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.startTime +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.endTime +'</td>';
 		  myArray[i] = sOut;
 		  i++;
 		});
