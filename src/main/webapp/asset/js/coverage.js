@@ -29,12 +29,10 @@ $(document).ready(function() {
 	
 	$(function(){
 		
-		$("#title").html("Code Coverage Summary")
 		$("#coverageTabs").removeClass("hide");
 		$("#testResultTabs").addClass("hide"); 
 		
 	    $("#codeCoverage").click(function(){
-	    	$("#title").html("Code Coverage Summary")
 			$("#coverageTabs").removeClass("hide");
 			$("#testResultTabs").addClass("hide"); 
 			$("#codeCoverage").addClass("on"); 
@@ -42,7 +40,6 @@ $(document).ready(function() {
 	    });
 	    
 	    $("#testResults").click(function(){
-	    	$("#title").html("Test Result Summary")
 			$("#testResultTabs").removeClass("hide");
 			$("#coverageTabs").addClass("hide"); 
 			$("#codeCoverage").removeClass("on"); 
