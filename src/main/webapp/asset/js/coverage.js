@@ -162,7 +162,7 @@ $(document).ready(function() {
 			"bJQueryUI" : true,
 			"bDestroy": true,
 			"bPaginate" : false,
-			"bServerSide" : true,
+			"bServerSide" : false,
 			"sAjaxSource" :  url + selectedBuild + '/coverage/' + testType ,
 			"sServerMethod" : "POST",
 			"aoColumns" : [ 
@@ -306,7 +306,7 @@ $(document).ready(function() {
 			"bJQueryUI" : true,
 			"bDestroy": true,
 			"bPaginate" : false,
-			"bServerSide" : true,
+			"bServerSide" : false,
 			"sAjaxSource" :  url + selectedBuild + '/result/' + testType ,
 			"sServerMethod" : "POST",
 			"aoColumns" : [ 
