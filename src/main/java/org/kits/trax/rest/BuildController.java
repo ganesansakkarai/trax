@@ -140,7 +140,6 @@ public class BuildController {
 		return response;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/build/{id}/coverage/{type}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> coverageSummary(@PathVariable("id") Long id, @PathVariable("type") String type) {
 
@@ -150,7 +149,6 @@ public class BuildController {
 
 		TestType testType = TestType.valueOf(type);
 		List<Build> modules = buildService.listModules(id, testType);
-		List<TestCoverage> testCoverages = new ArrayList<TestCoverage>();
 		
 		TestCoverage overall = new TestCoverage();
 		overall.setTestType(testType);
@@ -159,27 +157,18 @@ public class BuildController {
 				if (coverage.getTestType() == testType) {
 					overall.setCoverage(overall.getCoverage() + coverage.getCoverage());
 					overall.setLine(overall.getLine() + coverage.getLine());
-					overall.setMissedLine(overall.getMissedLine() + coverage.getLine());
+					overall.setMissedLine(overall.getMissedLine() + coverage.getMissedLine());
 					overall.setBranch(overall.getBranch() + coverage.getBranch());
 					overall.setMissedBranch(overall.getMissedBranch() + coverage.getMissedBranch());
-					overall.setClazzes(coverage.getClazzes());
 				}
 			}
 		}
-		
-		testCoverages.add(overall);
-		Map info = new HashMap();
-		info.put("sEcho", 1);
-		info.put("iTotalRecords", 1);
-		info.put("iTotalDisplayRecords", 1);
-		info.put("aaData", testCoverages);
 
-		String jsonData = JsonUtil.toJson(info);
+		String jsonData = JsonUtil.toJson(overall);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/build/{id}/result/{type}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> resultSummary(@PathVariable("id") Long id, @PathVariable("type") String type) {
 
@@ -189,7 +178,6 @@ public class BuildController {
 
 		TestType testType = TestType.valueOf(type);
 		List<Build> modules = buildService.listModules(id, testType);
-		List<TestResult> testRests = new ArrayList<TestResult>();
 		
 		TestResult overall = new TestResult();
 		overall.setTestType(testType);
@@ -201,19 +189,11 @@ public class BuildController {
 					overall.setFail(overall.getFail() + result.getFail());
 					overall.setSkip(overall.getSkip() + result.getSkip());
 					overall.setSuccess(overall.getSuccess() + result.getSuccess());
-					overall.setTestSuites(result.getTestSuites());
 				}
 			}
 		}
 		
-		testRests.add(overall);
-		Map info = new HashMap();
-		info.put("sEcho", 1);
-		info.put("iTotalRecords", 1);
-		info.put("iTotalDisplayRecords", 1);
-		info.put("aaData", testRests);
-		
-		String jsonData = JsonUtil.toJson(info);
+		String jsonData = JsonUtil.toJson(overall);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
