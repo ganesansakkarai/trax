@@ -374,8 +374,7 @@ $(document).ready(function() {
 			async : false,
 			url : url + selectedBuild + '/result/' + testType,
 			success : function(responseObject) {
-				testResult = responseObject.success;
-				alert(testResult);
+				testResult = responseObject.success;				
 			},
 			error : function(e, ts, et) {
 				alert('fail' + ts);
