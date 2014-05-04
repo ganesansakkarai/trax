@@ -13,6 +13,8 @@
 <script type="text/javascript" src="../asset/js/coverage.js"></script>
 <script src="../asset/js/jquery-ui.min.js"></script>
 <script src="../asset/js/jquery.selectBoxIt.min.js"></script>
+<script src="../asset/js/Chart.js"></script>
+
 
 </head>
 <body id="index">
@@ -39,8 +41,10 @@
 					<option>INTEGRATION</option>
 					<option>PERFORMANCE</option></select></td>
 			</tr>
-		</table>		
+		</table>	
+		
 		<div id="coverageTabs">	
+		<canvas id="coverageChart" height="300" width="300"></canvas>
 			<table class="display" id="coverage" style="width: 100% !important;">
 				<thead>
 					<tr>
@@ -63,6 +67,7 @@
 			</table>
 		</div>
 		<div id="testResultTabs">	
+		<canvas id="testResultChart" height="300" width="300"></canvas>
 			<table class="display" id="testResult" style="width: 100% !important;">
 				<thead>
 					<tr>

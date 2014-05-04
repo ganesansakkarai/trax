@@ -155,6 +155,7 @@ $(document).ready(function() {
 	
 	function refreshCoverage() {
 		
+		var coverage = 0;
 		coveragePackageRow = false;
 		coverageClassRow = false;
 		
@@ -194,6 +195,33 @@ $(document).ready(function() {
 		});
 		
 		$("#coverage").removeAttr("style");
+		
+		$.ajax({
+			dataType : "json",
+			type : 'POST',
+			async : false,
+			url : url + selectedBuild + '/coverage/' + testType,
+			success : function(responseObject) {
+				coverage = responseObject.coverage;
+			},
+			error : function(e, ts, et) {
+				alert('fail' + ts);
+			}
+		});		
+		
+		var notCoverage = 100 - coverage;
+		var pieData = [ {
+			value : coverage,
+			color : "#32bb1e"
+		}, {
+			value : notCoverage,
+			color : "#ff0000"
+		} ];
+
+		var myPie = new Chart(document.getElementById("coverageChart")
+				.getContext("2d")).Pie(pieData);
+		
+		
 	}
 	
 	$('#coverage td.coveragePackage').live( 'click', function () {
@@ -338,6 +366,33 @@ $(document).ready(function() {
 		});
 		
 		$("#testResult").removeAttr("style");
+		
+		var testResult = 0;
+		$.ajax({
+			dataType : "json",
+			type : 'POST',
+			async : false,
+			url : url + selectedBuild + '/result/' + testType,
+			success : function(responseObject) {
+				testResult = responseObject.success;
+				alert(testResult);
+			},
+			error : function(e, ts, et) {
+				alert('fail' + ts);
+			}
+		});		
+		
+		var notCoverage = 100 - testResult;
+		var pieData = [ {
+			value : testResult,
+			color : "#32bb1e"
+		}, {
+			value : notCoverage,
+			color : "#ff0000"
+		} ];
+
+		var myPie = new Chart(document.getElementById("testResultChart")
+				.getContext("2d")).Pie(pieData);
 	}
 	
 	$('#testResult td.testResultPackage').live( 'click', function () {
