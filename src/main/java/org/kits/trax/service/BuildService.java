@@ -3,7 +3,6 @@ package org.kits.trax.service;
 import java.util.List;
 
 import org.kits.trax.domain.Build;
-import org.kits.trax.domain.TestType;
 
 public interface BuildService {
 
@@ -11,7 +10,7 @@ public interface BuildService {
 
 	public List<Build> listBuilds(String name);
 	
-	public List<Build> listModules(Long id, TestType testType);
+	public List<Build> listModules(Long id);
 
 	public Build findBuild(Long id);
 

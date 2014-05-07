@@ -83,7 +83,7 @@ public class BuildControllerIT {
 	public void listApplications() throws Exception {
 
 		saveChildModuleBuild();
-		HttpResponse response = HttpUtil.post(url + "apps/");
+		HttpResponse response = HttpUtil.post(url + "apps");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -107,7 +107,7 @@ public class BuildControllerIT {
 	public void listModules() throws Exception {
 
 		Build build = saveChildModuleBuild();
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/modules/UNIT");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/modules");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -119,7 +119,7 @@ public class BuildControllerIT {
 	public void coverageSummaryWithSingleModule() throws Exception {
 
 		Build build = saveSingleModuleBuild();		
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/coverage/UNIT");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/coverage");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -130,7 +130,7 @@ public class BuildControllerIT {
 	public void resultSummaryWithSingleModule() throws Exception {
 
 		Build build = saveSingleModuleBuild();		
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/result/UNIT");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getId() + "/result");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -141,7 +141,7 @@ public class BuildControllerIT {
 	public void coverageSummaryWithMultipleModule() throws Exception {
 
 		Build build = saveChildModuleBuild();		
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/coverage/UNIT");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/coverage");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
@@ -152,7 +152,7 @@ public class BuildControllerIT {
 	public void resultSummaryWithMultipleModule() throws Exception {
 
 		Build build = saveChildModuleBuild();		
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/result/UNIT");
+		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/result");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());

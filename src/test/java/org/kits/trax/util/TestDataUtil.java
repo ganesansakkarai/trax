@@ -8,9 +8,7 @@ import org.kits.trax.domain.Method;
 import org.kits.trax.domain.TestCase;
 import org.kits.trax.domain.TestCoverage;
 import org.kits.trax.domain.TestResult;
-import org.kits.trax.domain.TestStatus;
 import org.kits.trax.domain.TestSuite;
-import org.kits.trax.domain.TestType;
 
 public class TestDataUtil {
 	
@@ -35,7 +33,7 @@ public class TestDataUtil {
 	public static TestCoverage getTestCoverage() {
 		
 		TestCoverage coverage = new TestCoverage();
-		coverage.setTestType(TestType.UNIT);
+		coverage.setTestType("UNIT");
 		
 		Clazz clazz = new Clazz();
 		clazz.setName("Sample");
@@ -57,7 +55,7 @@ public class TestDataUtil {
 	public static TestResult getTestResult() {
 		
 		TestResult testResult = new TestResult();
-		testResult.setTestType(TestType.UNIT);
+		testResult.setTestType("UNIT");
 		
 		TestSuite testSuite = new TestSuite();
 		testSuite.setName("Sample");
@@ -68,7 +66,7 @@ public class TestDataUtil {
 			testCase.setName("test" + i);
 			testCase.setDuration(10l);
 			testCase.setLog("testing");
-			testCase.setStatus(TestStatus.PASS);
+			testCase.setStatus("PASS");
 			testSuite.getTestCases().add(testCase);
 		}
 		

@@ -52,6 +52,7 @@ public class JsonUtil {
         T entity = new JSONDeserializer<T>().use(null, aClass).deserialize(json);
 
         if (LOGGER.isInfoEnabled()) {
+        	LOGGER.info("JSON " + json);
             LOGGER.info("Entity " + entity);
         }
 

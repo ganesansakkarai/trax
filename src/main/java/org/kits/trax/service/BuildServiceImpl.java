@@ -9,7 +9,6 @@ import org.kits.trax.domain.TestCase;
 import org.kits.trax.domain.TestCoverage;
 import org.kits.trax.domain.TestResult;
 import org.kits.trax.domain.TestSuite;
-import org.kits.trax.domain.TestType;
 import org.kits.trax.repository.BuildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,19 +64,13 @@ public class BuildServiceImpl implements BuildService {
 		return buildRepository.listBuilds(name);
 	}
 
-	public List<Build> listModules(Long id, TestType testType) {
+	public List<Build> listModules(Long id) {
 
 		List<Build> modules = buildRepository.listModules(id);
 		if (modules.size() > 1) {
 			for (Build module : modules) {
 				if (module.getId().equals(id)) {
 					modules.remove(module);
-				} else {
-					for (TestCoverage testCoverage : module.getTestCoverages()) {
-						if (testCoverage.getTestType() != testType) {
-							module.getTestCoverages().remove(testCoverage);
-						}
-					}
 				}
 			}
 		}
@@ -132,15 +125,15 @@ public class BuildServiceImpl implements BuildService {
 			for (TestCase testCase : testSuite.getTestCases()) {
 				switch (testCase.getStatus()) {
 
-				case PASS:
+				case "PASS":
 					testSuite.setPass(testSuite.getPass() + 1);
 					break;
 
-				case FAIL:
+				case "FAIL":
 					testSuite.setFail(testSuite.getFail() + 1);
 					break;
 
-				case SKIP:
+				case "SKIP":
 					testSuite.setSkip(testSuite.getSkip() + 1);
 					break;
 				}

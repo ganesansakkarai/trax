@@ -17,7 +17,7 @@ public class TestCoverage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private TestType testType;
+	private String testType;
 	private double line;
 	private double missedLine;
 	private double branch;
@@ -38,11 +38,11 @@ public class TestCoverage {
 		this.id = id;
 	}
 
-	public TestType getTestType() {
+	public String getTestType() {
 		return testType;
 	}
 
-	public void setTestType(TestType testType) {
+	public void setTestType(String testType) {
 		this.testType = testType;
 	}
 

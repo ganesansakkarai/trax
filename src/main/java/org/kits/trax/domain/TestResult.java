@@ -17,7 +17,7 @@ public class TestResult {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private TestType testType;
+	private String testType;
 	private double pass;
 	private double fail;
 	private double skip;
@@ -30,11 +30,11 @@ public class TestResult {
 		testSuites = new ArrayList<>();
 	}
 	
-	public TestType getTestType() {
+	public String getTestType() {
 		return testType;
 	}
 
-	public void setTestType(TestType testType) {
+	public void setTestType(String testType) {
 		this.testType = testType;
 	}
 

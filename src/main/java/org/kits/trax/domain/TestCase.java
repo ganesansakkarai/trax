@@ -12,7 +12,7 @@ public class TestCase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
-	private TestStatus status;
+	private String status;
 	private String log;
 	private double duration;
 
@@ -32,11 +32,11 @@ public class TestCase {
 		this.name = name;
 	}
 
-	public TestStatus getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(TestStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
