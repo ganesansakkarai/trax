@@ -2,13 +2,15 @@ package org.kits.trax.rest;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.kits.trax.domain.Build;
+import org.kits.trax.domain.Clazz;
+import org.kits.trax.domain.Method;
+import org.kits.trax.domain.TestCase;
 import org.kits.trax.domain.TestCoverage;
 import org.kits.trax.domain.TestResult;
+import org.kits.trax.domain.TestSuite;
 import org.kits.trax.service.BuildService;
 import org.kits.trax.util.JsonUtil;
 import org.slf4j.Logger;
@@ -97,26 +99,135 @@ public class BuildController {
 		return response;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/build/{id}/modules", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> listModules(@PathVariable("id") Long id)
-	        throws ParseException {
+	@RequestMapping(value = "/build/{id}/coverage", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> coverage(@PathVariable("id") Long id) throws ParseException {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
 		LOGGER.info("Listing modules for build " + id);
-		List<Build> result = buildService.listModules(id);
-		Map info = new HashMap();
-		info.put("sEcho", 1);
-		info.put("iTotalRecords", 1);
-		info.put("iTotalDisplayRecords", 1);
-		info.put("aaData", result);
-		String jsonData = JsonUtil.toJson(info);
+		Build build = buildService.findBuild(id);
+		List<Coverage> coverages = getCoverages(build);
+		String jsonData = JsonUtil.toJsonArray(coverages);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
-
 		return response;
+	}
+
+	@RequestMapping(value = "/build/{id}/result", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> result(@PathVariable("id") Long id) throws ParseException {
+
+		ResponseEntity<String> response = null;
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+
+		LOGGER.info("Listing modules for build " + id);
+		Build build = buildService.findBuild(id);
+		List<Result> results = getResult(build);
+		String jsonData = JsonUtil.toJsonArray(results);
+		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
+		return response;
+	}
+
+	private List<Coverage> getCoverages(Build build) {
+
+		List<Coverage> coverages = new ArrayList<>();
+		for (TestCoverage testCoverage : build.getTestCoverages()) {
+
+			Coverage moduleCoverage = new Coverage();
+			moduleCoverage.setId(coverages.size() + 1);
+			moduleCoverage.setIndent(0);
+			moduleCoverage.setParent(null);
+			moduleCoverage.setName(build.getName());
+			moduleCoverage.setType(testCoverage.getTestType());
+			moduleCoverage.setCoverage(testCoverage.getCoverage());
+			moduleCoverage.setLine(testCoverage.getLine());
+			moduleCoverage.setMissedLine(testCoverage.getMissedLine());
+			moduleCoverage.setBranch(testCoverage.getBranch());
+			moduleCoverage.setMissedBranch(testCoverage.getMissedBranch());
+			coverages.add(moduleCoverage);
+
+			for (Clazz clazz : testCoverage.getClazzes()) {
+
+				Coverage clazzCoverage = new Coverage();
+				clazzCoverage.setId(coverages.size() + 1);
+				clazzCoverage.setIndent(1);
+				clazzCoverage.setParent(moduleCoverage.getId());
+				clazzCoverage.setType(testCoverage.getTestType());
+				clazzCoverage.setName(clazz.getName());
+				clazzCoverage.setCoverage(clazz.getCoverage());
+				clazzCoverage.setLine(clazz.getLine());
+				clazzCoverage.setMissedLine(clazz.getMissedLine());
+				clazzCoverage.setBranch(clazz.getBranch());
+				clazzCoverage.setMissedBranch(clazz.getMissedBranch());
+				coverages.add(clazzCoverage);
+
+				for (Method method : clazz.getMethods()) {
+					Coverage methodCoverage = new Coverage();
+					methodCoverage.setId(coverages.size() + 1);
+					methodCoverage.setIndent(2);
+					methodCoverage.setParent(clazzCoverage.getId());
+					methodCoverage.setName(method.getName());
+					methodCoverage.setType(testCoverage.getTestType());
+					methodCoverage.setCoverage(method.getCoverage());
+					methodCoverage.setLine(method.getLine());
+					methodCoverage.setMissedLine(method.getMissedLine());
+					methodCoverage.setBranch(method.getBranch());
+					methodCoverage.setMissedBranch(method.getMissedBranch());
+					coverages.add(methodCoverage);
+				}
+			}
+		}
+		
+		return coverages;
+	}
+	
+	private List<Result> getResult(Build build) {
+
+		List<Result> results = new ArrayList<>();
+		for (TestResult testResult : build.getTestResults()) {
+
+			Result moduleResult = new Result();
+			moduleResult.setId(results.size() + 1);
+			moduleResult.setIndent(0);
+			moduleResult.setParent(null);
+			moduleResult.setName(build.getName());
+			moduleResult.setType(testResult.getTestType());
+			moduleResult.setPass(testResult.getPass());
+			moduleResult.setFail(testResult.getFail());
+			moduleResult.setSkip(testResult.getSkip());
+			double total = moduleResult.getPass() + moduleResult.getFail() + moduleResult.getSkip();
+			moduleResult.setSuccess(moduleResult.getPass()/total * 100);
+			results.add(moduleResult);
+
+			for (TestSuite testSuite : testResult.getTestSuites()) {
+
+				Result suiteResult = new Result();
+				suiteResult.setId(results.size() + 1);
+				suiteResult.setIndent(0);
+				suiteResult.setParent(null);
+				suiteResult.setName(testSuite.getName());
+				suiteResult.setType(testResult.getTestType());
+				suiteResult.setPass(testSuite.getPass());
+				suiteResult.setFail(testSuite.getFail());
+				suiteResult.setSkip(testSuite.getSkip());
+				total = suiteResult.getPass() + suiteResult.getFail() + suiteResult.getSkip();				
+				suiteResult.setSuccess(suiteResult.getPass()/total * 100);
+				results.add(suiteResult);
+
+				for (TestCase testCase : testSuite.getTestCases()) {
+					Result methodResult = new Result();
+					methodResult.setId(results.size() + 1);
+					methodResult.setIndent(0);
+					methodResult.setParent(null);
+					methodResult.setName(testCase.getName());
+					methodResult.setType(testResult.getTestType());
+					results.add(methodResult);
+				}
+			}
+		}
+		
+		return results;
 	}
 
 	@RequestMapping(value = "/build/{id}/delete", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -137,68 +248,27 @@ public class BuildController {
 
 		return response;
 	}
-	
-	@RequestMapping(value = "/build/{id}/coverage", method = RequestMethod.POST, headers = "Accept=application/json")
+
+	@RequestMapping(value = "/build/{id}/coverage/summary", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> coverageSummary(@PathVariable("id") Long id) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-
-		List<Build> modules = buildService.listModules(id);
-		Map<String, TestCoverage> typeCoverageMap = new HashMap<>();
-		
-		for (Build module : modules) {
-			for (TestCoverage coverage : module.getTestCoverages()) {
-				TestCoverage summary = typeCoverageMap.get(coverage.getTestType()); 
-				if(summary == null) {
-					summary = new TestCoverage();
-					typeCoverageMap.put(coverage.getTestType(), summary);
-				}
-				
-				summary.setCoverage(summary.getCoverage() + coverage.getCoverage());
-				summary.setLine(summary.getLine() + coverage.getLine());
-				summary.setMissedLine(summary.getMissedLine() + coverage.getMissedLine());
-				summary.setBranch(summary.getBranch() + coverage.getBranch());
-				summary.setMissedBranch(summary.getMissedBranch() + coverage.getMissedBranch());
-			}
-		}
-		
-		List<TestCoverage> coverages = new ArrayList<>();
-		coverages.addAll(typeCoverageMap.values());
-		String jsonData = JsonUtil.toJsonArray(coverages);
+		Build build = buildService.findBuild(id);
+		String jsonData = JsonUtil.toJsonArray(build.getTestCoverages());
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
-	
-	@RequestMapping(value = "/build/{id}/result", method = RequestMethod.POST, headers = "Accept=application/json")
+
+	@RequestMapping(value = "/build/{id}/result/summary", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> resultSummary(@PathVariable("id") Long id) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-
-		List<Build> modules = buildService.listModules(id);
-		Map<String, TestResult> typeResultMap = new HashMap<>();
-		
-		for (Build module : modules) {
-			for (TestResult result : module.getTestResults()) {
-				TestResult summary = typeResultMap.get(result.getTestType()); 
-				if(summary == null) {
-					summary = new TestResult();
-					typeResultMap.put(result.getTestType(), summary);
-				}
-				
-				summary.setDuration(summary.getDuration() + result.getDuration());
-				summary.setPass(summary.getPass() + result.getPass());
-				summary.setFail(summary.getFail() + result.getFail());
-				summary.setSkip(summary.getSkip() + result.getSkip());
-				summary.setSuccess(summary.getSuccess() + result.getSuccess());
-			}
-		}
-		
-		List<TestResult> results = new ArrayList<>();
-		String jsonData = JsonUtil.toJsonArray(results);
+		Build build = buildService.findBuild(id);
+		String jsonData = JsonUtil.toJsonArray(build.getTestResults());
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}

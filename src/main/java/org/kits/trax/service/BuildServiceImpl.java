@@ -37,19 +37,55 @@ public class BuildServiceImpl implements BuildService {
 
 	public Build saveModule(Long id, Build build) {
 
+		Build parent = null;
 		if (id != null) {
-			Build parent = buildRepository.findOne(id);
-			build.setParent(parent);
+			parent = buildRepository.findOne(id);
 		}
 
 		for (TestCoverage testCoverage : build.getTestCoverages()) {
 			process(testCoverage);
+			boolean found = false;
+			if (id != null) {
+				for (TestCoverage coverage : parent.getTestCoverages()) {
+					if(coverage.getTestType().equals(testCoverage.getTestType())) {
+						found = true;
+						coverage.setLine(testCoverage.getLine() + coverage.getLine());
+						coverage.setMissedLine(testCoverage.getMissedLine() + coverage.getMissedLine());
+						coverage.setCoverage((coverage.getLine() - coverage.getMissedLine()) / coverage.getLine() * 100);
+						coverage.setBranch(testCoverage.getBranch() + coverage.getBranch());
+						coverage.setMissedBranch(testCoverage.getMissedBranch() + coverage.getMissedBranch());
+					}
+				}
+				
+				if(!found) {
+					parent.getTestCoverages().add(testCoverage);
+				}
+			}
 		}
 
 		for (TestResult testResult : build.getTestResults()) {
 			processTestResult(testResult);
+			boolean found = false;
+			if (id != null) {
+				for (TestResult result : parent.getTestResults()) {
+					if(result.getTestType().equals(testResult.getTestType())) {
+						found = true;
+						result.setDuration(testResult.getDuration() + result.getDuration());
+						result.setPass(testResult.getPass() + result.getPass());
+						result.setSkip(testResult.getSkip() + result.getSkip());
+						result.setFail(testResult.getFail() + result.getFail());
+						result.setSuccess(result.getPass() / (result.getPass() + result.getSkip() + result.getFail()) * 100);
+					}
+				}
+				
+				if(!found) {
+					parent.getTestResults().add(testResult);
+				}
+			}
 		}
 
+		buildRepository.save(parent);
+		build.setParent(parent);
 		buildRepository.save(build);
 		return build;
 	}
@@ -64,20 +100,6 @@ public class BuildServiceImpl implements BuildService {
 		return buildRepository.listBuilds(name);
 	}
 
-	public List<Build> listModules(Long id) {
-
-		List<Build> modules = buildRepository.listModules(id);
-		if (modules.size() > 1) {
-			for (Build module : modules) {
-				if (module.getId().equals(id)) {
-					modules.remove(module);
-				}
-			}
-		}
-
-		return modules;
-	}
-
 	public Build findBuild(Long id) {
 
 		return buildRepository.findOne(id);
@@ -86,14 +108,6 @@ public class BuildServiceImpl implements BuildService {
 	public void deleteBuild(Long id) {
 
 		Build build = buildRepository.findOne(id);
-		List<Build> modules = buildRepository.listModules(id);
-
-		for (Build module : modules) {
-			if (module.getId() != build.getId()) {
-				buildRepository.delete(module);
-			}
-		}
-
 		buildRepository.delete(build);
 	}
 

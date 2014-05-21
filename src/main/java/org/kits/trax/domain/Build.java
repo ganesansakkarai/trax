@@ -25,18 +25,21 @@ public class Build {
 	private String name;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Build parent;
+	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Build> modules;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "BUILD_TEST_RESULT", joinColumns = @JoinColumn(name = "BUILD_ID"), inverseJoinColumns = @JoinColumn(name = "TEST_RESULT_ID"))
 	private List<TestResult> testResults;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "BUILD_TEST_COVERAGE", joinColumns = @JoinColumn(name = "BUILD_ID"), inverseJoinColumns = @JoinColumn(name = "TEST_COVERAGE_ID"))
 	private List<TestCoverage> testCoverages;
-	
-	public Build() {		
+
+	public Build() {
+		modules = new ArrayList<>();
 		testResults = new ArrayList<>();
 		testCoverages = new ArrayList<>();
 	}
-	
+
 	public Build(Long id, String name, Date timeStamp) {
 		this.id = id;
 		this.name = name;
@@ -75,6 +78,14 @@ public class Build {
 		this.parent = parent;
 	}
 
+	public List<Build> getModules() {
+		return modules;
+	}
+
+	public void setModules(List<Build> modules) {
+		this.modules = modules;
+	}
+
 	public List<TestResult> getTestResults() {
 		return testResults;
 	}
@@ -90,7 +101,7 @@ public class Build {
 	public void setTestCoverages(List<TestCoverage> testCoverages) {
 		this.testCoverages = testCoverages;
 	}
-	
+
 	public String toString() {
 		return String.valueOf(id);
 	}

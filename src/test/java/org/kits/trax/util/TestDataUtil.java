@@ -15,15 +15,15 @@ public class TestDataUtil {
 	public static Build getRootBuild() {
 
 		Build build = new Build();
-		build.setName("root");
-		build.setTimeStamp(new Date());		
+		build.setName("multi");
+		build.setTimeStamp(new Date());
 		return build;
 	}
 	
 	public static Build getModuleBuild() {
 
 		Build build = new Build();
-		build.setName("sample");
+		build.setName("single");
 		build.setTimeStamp(new Date());
 		build.getTestCoverages().add(getTestCoverage());
 		build.getTestResults().add(getTestResult());

@@ -53,18 +53,17 @@ public class BuildServiceTest {
 	}
 
 	@Test
-	public void listModules() {
+	public void findBuild() {
 		Build root = TestDataUtil.getRootBuild();
 		root = buildService.saveBuild(root);
 		Build build = TestDataUtil.getModuleBuild();
 		build = buildService.saveModule(root.getId(), build);
-		List<Build> builds = buildService.listModules(root.getId());
-		Assert.assertNotNull(builds);
+		build = buildService.findBuild(root.getId());
+		Assert.assertNotNull(build);
 	}
 
 	@Test
 	public void delete() {
-
 		Build root = TestDataUtil.getRootBuild();
 		root = buildService.saveBuild(root);
 		Build build = TestDataUtil.getModuleBuild();
