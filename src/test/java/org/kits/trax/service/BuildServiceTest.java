@@ -59,7 +59,9 @@ public class BuildServiceTest {
 		Build build = TestDataUtil.getModuleBuild();
 		build = buildService.saveModule(root.getId(), build);
 		build = buildService.findBuild(root.getId());
+		
 		Assert.assertNotNull(build);
+		Assert.assertTrue(build.getModules().size() == 1);
 	}
 
 	@Test

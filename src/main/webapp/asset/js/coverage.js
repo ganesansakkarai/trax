@@ -1,504 +1,119 @@
-$(document).ready(function() {	
-	
-	var appListUrl = 'http://localhost:8080/apps/'
-	var buildUrl = 'http://localhost:8080/app/'
-	var url = 'http://localhost:8080/build/';
-	var selectedApp;
-	var selectedBuild;
-	var testType = 'UNIT';
-	var coverageTable ;
-	var coverageAnOpen = [];
-	var coverageParentRow;
-	var coveragePackageRow = false;
-	var coverageClassRow = false;
-	var testResultTable ;
-	var testResultAnOpen = [];
-	var testResultParentRow;
-	var testResultPackageRow = false;
-	var testResultClassRow = false;
-	
-	$(function() {
-		
-		$("select").selectBoxIt({
-			showEffect : "fadeIn",
-			showEffectSpeed : 400,
-			hideEffect : "fadeOut",
-			hideEffectSpeed : 400
-		});
-	});
-	
-	$(function(){
-		
-		$("#coverageTabs").removeClass("hide");
-		$("#testResultTabs").addClass("hide"); 
-		
-	    $("#codeCoverage").click(function(){
-			$("#coverageTabs").removeClass("hide");
-			$("#testResultTabs").addClass("hide"); 
-			$("#codeCoverage").addClass("on"); 
-			$("#testResults").removeClass("on"); 
-	    });
-	    
-	    $("#testResults").click(function(){
-			$("#testResultTabs").removeClass("hide");
-			$("#coverageTabs").addClass("hide"); 
-			$("#codeCoverage").removeClass("on"); 
-			$("#testResults").addClass("on"); 
-	    });
-	});
-	
 
-	$.ajax({
-		dataType : "json",
-		type : 'POST',
-		async : false ,
-		url : appListUrl ,
-		success : function(responseObject) {
-			var applications = $("#applicationType");
-			applications.empty();
-			$.each(responseObject, function(index, value) {
-				applications.append('<option value="' + value + '">'
-						+ value + '</option>');
-			});
+var TaskNameFormatter = function (row, cell, value, columnDef, dataContext) {
+    value = value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    var spacer = "<span style='display:inline-block;height:1px;width:" + (15 * dataContext["indent"]) + "px'></span>";
+    var idx = dataView.getIdxById(dataContext.id);
+    if (data[idx + 1] && data[idx + 1].indent > data[idx].indent) {
+        if (dataContext._collapsed) {
+            return spacer + " <span class='toggle expand'></span>&nbsp;" + value;
+        } else {
+            return spacer + " <span class='toggle collapse'></span>&nbsp;" + value;
+        }
+    } else {
+        return spacer + " <span class='toggle'></span>&nbsp;" + value;
+    }
+};
 
-			if (selectedApp == undefined) {
-				selectedApp = $("#applicationType option:first").val();
-			}
-			loadBuild();
-		},
-		error : function(xhr, status, error) {
-			alert('failed : ' + err.Message);
-		}
-	});
+var dataView;
+var grid;
+var data = [];
 
-	$("#applicationType").change(function() {
+var columns = [
+    {id: "name", name: "Name", field: "name", cssClass: "cell-title", formatter: TaskNameFormatter, width:500},
+    {id: "type", name: "Type", field: "type"},
+    {id: "coverage", name: "Coverage", field: "coverage"},
+    {id: "line", name: "Line", field: "line"},
+    {id: "mline", name: "Missed Line", field: "mline"},
+    {id: "branch", name: "Branch", field: "branch"},
+    {id: "mbranch", name: "Missed Branch", field: "mbranch", width: 100}
+];
 
-		$("#applicationType option:selected").each(function() {
-			selectedApp = $(this).text();
-		});
-		loadBuild();
-	})
+var options = {};
 
-	function loadBuild() {
-		
-		$.ajax({
-			dataType : "json",
-			type : 'POST',
-			async : false,
-			url : buildUrl + selectedApp + '/' + 'builds',
-			success : function(responseObject) {
-				var builds = $("#builds");
-				builds.empty();
-				$.each(responseObject, function(index, value) {
-					builds.append('<option value="' + value.id + '">'
-							+ value.name + '</option>');
-				});
+var searchString = "";
 
-				if (selectedBuild == undefined) {
-					selectedBuild = $("#builds option:first").val();
-				}
-				refreshCoverage();
-				refreshTestResults();
-			}
-		});
-	}
+function myFilter(item) {
 
-	$("#builds").change(function() {
+    if (searchString != "" && item["name"].indexOf(searchString) == -1) {
+        return false;
+    }
 
-		$("#builds option:selected").each(function() {
-			selectedBuild = $(this).val();
-			refreshCoverage();
-			refreshTestResults();
-		});
-	})
+    if (item.parent != null) {
+        var parent = data[item.parent];
 
-	fnOpenNewRow = function(nTr, myArray, sClass, table) {
+        while (parent) {
+            if (parent._collapsed || (searchString != "" && parent["name"].indexOf(searchString) == -1)) {
+                return false;
+            }
 
-		var oSettings = table.fnSettings();
-		table.fnClose(nTr);
-		for ( var i in myArray) {
-			var nNewRow = document.createElement("tr");
-			if (typeof mHtml === "string") {
-				nNewRow.innerHTML = myArray[i];
-			} else {
-				$(nNewRow).html(myArray[i]);
-			}
+            parent = data[parent.parent];
+        }
+    }
 
-			var nTrs = $('tr', oSettings.nTBody);
-			if ($.inArray(nTr, nTrs) != -1) {
-				$(nNewRow).insertAfter(nTr);
-			}
+    return true;
+}
 
-			oSettings.aoOpenRows.push({
-				"nTr" : nNewRow,
-				"nParent" : nTr
-			});
-		}
-		return nNewRow;
-	};
+$(function () {
 
-	fnCloseOpenedRow = function(nTr, table) {
+    var response = null;
+    $.post("http://localhost:8080/app/single/builds", function(data) {
+       response = data;
+       alert("Data : " + response);
+    });
 
-		var oSettings = table.fnSettings();
-		var index = oSettings.aoOpenRows.length - 1;
-		for ( var i = index; i >= 0; i--) {
-			if (oSettings.aoOpenRows[i].nParent == nTr) {
-				var nTrParent = oSettings.aoOpenRows[i].nTr.parentNode;
-				if (nTrParent) {
-					nTrParent.removeChild(oSettings.aoOpenRows[i].nTr);
-				}
-				oSettings.aoOpenRows.splice(i, 1);
-			}
-		}
-		return 1;
-	};
-	
-	function refreshCoverage() {
-		
-		var coverage = 0;
-		coveragePackageRow = false;
-		coverageClassRow = false;
-		
-		coverageTable = $('#coverage').dataTable({
-			"bJQueryUI" : true,
-			"bDestroy": true,
-			"bPaginate" : false,
-			"bServerSide" : false,
-			"sAjaxSource" :  url + selectedBuild + '/coverage/' + testType ,
-			"sServerMethod" : "POST",
-			"aoColumns" : [ 
-			{
-			     "mDataProp": null,
-			     "sClass": "coveragePackage left",
-			     "sDefaultContent": '<img src="../asset/image/details_open.png">',
-			     "sWidth": "10%"
-			}, {
-				"mData" : "id"
-			}, {
-			     "mDataProp": null,
-			     "sClass": "testResultPackage left",
-			     "sDefaultContent": ''
-			}, {
-				"mData" : "coverage"
-			}, {
-				"mData" : "line"
-			}, {
-				"mData" : "missedLine"
-			}, {
-				"mData" : "branch"
-			}, {
-				"mData" : "missedBranch"
-			} ],
-			"aoColumnDefs" : [ 
-			          {"sClass" : "center","aTargets" : [2,3,4,5,6,7]},
-			          { "bVisible": false, "aTargets": [ 1 ] }]
-		});
-		
-		$("#coverage").removeAttr("style");
-		
-		$.ajax({
-			dataType : "json",
-			type : 'POST',
-			async : false,
-			url : url + selectedBuild + '/coverage/' + testType,
-			success : function(responseObject) {
-				coverage = responseObject.coverage;
-			},
-			error : function(e, ts, et) {
-				alert('fail' + ts);
-			}
-		});		
-		
-		var notCoverage = 100 - coverage;
-		var pieData = [ {
-			value : coverage,
-			color : "#32bb1e"
-		}, {
-			value : notCoverage,
-			color : "#ff0000"
-		} ];
+    // prepare the data
+    data[0] = {id: 'id_' + 1, indent:0, parent:null, type: "Unit", name:"Sample", coverage:80.0, line:10, mline:0, branch:3, mbranch:2};
+    data[1] = {id: 'id_' + 2, indent:1, parent:0, type: "Unit", name:"Util", coverage:80.0, line:10, mline:0, branch:3, mbranch:2};
+    data[2] = {id: 'id_' + 3, indent:2, parent:1, type: "Unit", name:"org.kits.trax.HttpUtil", coverage:80.0, line:10, mline:0, branch:3, mbranch:2};
 
-		var myPie = new Chart(document.getElementById("coverageChart")
-				.getContext("2d")).Pie(pieData);
-		
-		
-	}
-	
-	$('#coverage td.coveragePackage').live( 'click', function () {
-		
-		if(coveragePackageRow || coverageClassRow){
-			return false;
-		}
-		var nTr = this.parentNode;
-		coverageParentRow = nTr;
-		var i = $.inArray( nTr, coverageAnOpen );
-	    
-		if ( i === -1 ) {
-			$('img', this).attr( 'src', "../asset/image/details_close.png" );
-			fnOpenNewRow( nTr, fnClazzesDetails(coverageTable, nTr), 'details', coverageTable);
-			coverageAnOpen.push( nTr );
-	    } else {
-	    	$('img', this).attr( 'src', "../asset/image/details_open.png" );
-	    	fnCloseOpenedRow( nTr,  coverageTable);
-	    	coverageAnOpen.splice( i, 1 );
-	    }
-		
-	});
-		 
-	function fnClazzesDetails( coverageTable, nTr )
-	{
-	
-	  var oData = coverageTable.fnGetData( nTr );
-	  var clazzes = oData.clazzes;
-	
-	  var myArray = [];
-	  var i= 0; 
-	  $.each(clazzes, function(key,value){
-		  var sOut ='';
-		  sOut = sOut + '<td class="clazzes center" style="background-color:#F9F9F9"><img src="../asset/image/details_open.png"></td>';
-		  sOut = sOut + '<td id="id" align="center" style="display:none">'+value.id +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.name +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.coverage +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.line +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.missedLine +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.branch +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.missedBranch +'</td>';
-		  myArray[i] = sOut;
-		  i++;
-		});
-	
-	 return myArray;
-	}
-	
-	$('#coverage td.clazzes').live( 'click', function () {
-		
-		if(coverageClassRow){
-			return false;
-		}
-		
-		var nTr = this.parentNode;
-		var id = $(this).closest('td').next('td').html();    
-		var i = $.inArray( nTr, coverageAnOpen );
-		    
-	   if ( i === -1 ) {
-	      $('img', this).attr( 'src', "../asset/image/details_close.png" );
-	      coveragePackageRow = true;
-	      fnOpenNewRow( nTr, fnMethodsDetails(coverageTable, id), 'details', coverageTable);
-	      coverageAnOpen.push( nTr );
-	    }
-	    else {
-	      $('img', this).attr( 'src', "../asset/image/details_open.png" );
-	      coveragePackageRow = false;
-	      fnCloseOpenedRow( nTr, coverageTable);
-	      coverageAnOpen.splice( i, 1 );
-	    }
-	});
-	
-	function fnMethodsDetails(coverageTable, id) {
-		
-	  var oData = coverageTable.fnGetData( coverageParentRow );
-	  var clazzes = oData.clazzes;
-	  var myArray = [];
-	  
-	  $.each(clazzes, function(key,value){
-		if(value.id == id){
-			var i= 0; 
-			if(this.methods){
-				$.each(this.methods, function(key,value){
-				 var sOut ='';
-				 sOut = sOut + '<td class="classes" align="right" style="background-color:#EAEAEA"></td>';
-				 sOut = sOut + '<td id="id" align="center" style="display:none;background-color:#EAEAEA">'+value.id +'</td>';
-				 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.name +'</td>';
-				 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.coverage +'</td>';
-				 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.line +'</td>';
-				 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.missedLine +'</td>';
-				 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.branch +'</td>';
-				 sOut = sOut + '<td align="center" style="background-color:#EAEAEA">'+value.missedBranch +'</td>';
-				 myArray[i] = sOut;
-				 i++;
-				});
-			}
-		}
-	  });
-		 
-	return myArray;
-	}
-	
-	
-	function refreshTestResults() {
-		
-		testResultPackageRow = false;
-		testResultClassRow = false;
-		
-		testResultTable = $('#testResult').dataTable({
-			"bJQueryUI" : true,
-			"bDestroy": true,
-			"bPaginate" : false,
-			"bServerSide" : false,
-			"sAjaxSource" :  url + selectedBuild + '/result/' + testType ,
-			"sServerMethod" : "POST",
-			"aoColumns" : [ 
-			{
-			     "mDataProp": null,
-			     "sClass": "testResultPackage left",
-			     "sDefaultContent": '<img src="../asset/image/details_open.png">',
-			     "sWidth": "10%"
-			},{
-				"mData" : "id"
-			},{
-			     "mDataProp": null,
-			     "sClass": "testResultPackage left",
-			     "sDefaultContent": ''
-			},{
-				"mData" : "duration"
-			},{
-				"mData" : "pass"
-			}, {
-				"mData" : "fail"
-			}, {
-				"mData" : "skip"
-			}, {
-				"mData" : "success"
-			}],
-			"aoColumnDefs" : [ 
-			          {"sClass" : "center","aTargets" : [2,3,4,5,6,7]},
-			          { "bVisible": false, "aTargets": [ 1 ] }]
-		});
-		
-		$("#testResult").removeAttr("style");
-		
-		var testResult = 0;
-		$.ajax({
-			dataType : "json",
-			type : 'POST',
-			async : false,
-			url : url + selectedBuild + '/result/' + testType,
-			success : function(responseObject) {
-				testResult = responseObject.success;				
-			},
-			error : function(e, ts, et) {
-				alert('fail' + ts);
-			}
-		});		
-		
-		var notCoverage = 100 - testResult;
-		var pieData = [ {
-			value : testResult,
-			color : "#32bb1e"
-		}, {
-			value : notCoverage,
-			color : "#ff0000"
-		} ];
+    // initialize the model
+    dataView = new Slick.Data.DataView({ inlineFilters: true });
+    dataView.beginUpdate();
+    dataView.setItems(data);
+    dataView.setFilter(myFilter);
+    dataView.endUpdate();
 
-		var myPie = new Chart(document.getElementById("testResultChart")
-				.getContext("2d")).Pie(pieData);
-	}
-	
-	$('#testResult td.testResultPackage').live( 'click', function () {
-		
-		if(testResultPackageRow || testResultClassRow){
-			return false;
-		}
-		var nTr = this.parentNode;
-		testResultParentRow = nTr;
-		var i = $.inArray( nTr, testResultAnOpen );
-	    
-		if ( i === -1 ) {
-			$('img', this).attr( 'src', "../asset/image/details_close.png" );
-			fnOpenNewRow( nTr, fnTestSuiteDetails(testResultTable, nTr), 'details', testResultTable);
-			testResultAnOpen.push( nTr );
-	    } else {
-	    	$('img', this).attr( 'src', "../asset/image/details_open.png" );
-	    	fnCloseOpenedRow( nTr,  testResultTable);
-	    	testResultAnOpen.splice( i, 1 );
-	    }
-		
-	});
-		 
-	function fnTestSuiteDetails( testResultTable, nTr )
-	{
-	
-	  var oData = testResultTable.fnGetData( nTr );
-	  var testSuites = oData.testSuites;
-	
-	  var myArray = [];
-	  var i= 0; 
-	  $.each(testSuites, function(key,value){
-		  var sOut ='';
-		  sOut = sOut + '<td class="testSuite center" style="background-color:#F9F9F9"><img src="../asset/image/details_open.png"></td>';
-		  sOut = sOut + '<td id="id" align="center" style="display:none">'+value.id +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.name +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.duration +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.pass +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.fail +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.skip +'</td>';
-		  sOut = sOut + '<td align="center" style="background-color:#F9F9F9">'+value.success +'</td>';
-		  myArray[i] = sOut;
-		  i++;
-		});
-	
-	 return myArray;
-	}
-	
-	$('#testResult td.testSuite').live( 'click', function () {
-		
-		if(testResultClassRow){
-			return false;
-		}
-		
-		var nTr = this.parentNode;
-		var id = $(this).closest('td').next('td').html();    
-		var i = $.inArray( nTr, testResultAnOpen );
-		    
-	   if ( i === -1 ) {
-	      $('img', this).attr( 'src', "../asset/image/details_close.png" );
-	      testResultPackageRow = true;
-	      fnOpenNewRow( nTr, fnTestCaseDetails(testResultTable, id), 'details', testResultTable);
-	      testResultAnOpen.push( nTr );
-	    }
-	    else {
-	      $('img', this).attr( 'src', "../asset/image/details_open.png" );
-	      testResultPackageRow = false;
-	      fnCloseOpenedRow( nTr, testResultTable);
-	      testResultAnOpen.splice( i, 1 );
-	    }
-	});
-	
-	function fnTestCaseDetails(testResultTable, id) {
-		
-	  var oData = testResultTable.fnGetData( testResultParentRow );
-	  var testSuites = oData.testSuites;
-	  var myArray = [];
-	  
-	  $.each(testSuites, function(key,value){
-		if(value.id == id){
-			var i= 0; 
-			if(this.testCases){
-				$.each(this.testCases, function(key,value){
-				
-				 var color ='';
-				
-				 if(value.status =='PASS'){
-					 color = 'green';
-				 } else if(value.status =='FAIL'){
-					 color = 'red';
-				 } else {
-					 color = 'yellow';
-				 }
-					 
-				 var sOut ='';
-				 sOut = sOut + '<td class="testcases" align="right" style= "background-color:'+ color +'">';
-				 sOut = sOut + '<td id="id" align="center" style= "display:none; background-color:'+ color +'">'+ value.id +'</td>';
-				 sOut = sOut + '<td align="center" style= "background-color:'+ color +'">'+ value.name +'</td>';
-				 sOut = sOut + '<td align="center" style= "background-color:'+ color +'">'+ value.duration +'</td>';
-				 sOut = sOut + '<td align="left" style= "background-color:'+ color +'" colspan="6">'+ value.log +'</td>';
-				 myArray[i] = sOut;
-				 i++;
-				});
-			}
-		}
-	  });
-		 
-	return myArray;
-	}
+    // initialize the grid
+    grid = new Slick.Grid("#myGrid", dataView, columns, options);
+
+    grid.onClick.subscribe(function (e, args) {
+        if ($(e.target).hasClass("toggle")) {
+            var item = dataView.getItem(args.row);
+            if (item) {
+                if (!item._collapsed) {
+                    item._collapsed = true;
+                } else {
+                    item._collapsed = false;
+                }
+
+                dataView.updateItem(item.id, item);
+            }
+            e.stopImmediatePropagation();
+        }
+    });
+
+
+    // wire up model events to drive the grid
+    dataView.onRowCountChanged.subscribe(function (e, args) {
+        grid.updateRowCount();
+        grid.render();
+    });
+
+    dataView.onRowsChanged.subscribe(function (e, args) {
+        grid.invalidateRows(args.rows);
+        grid.render();
+    });
+
+    // wire up the search textbox to apply the filter to the model
+    $("#txtSearch").keyup(function (e) {
+        Slick.GlobalEditorLock.cancelCurrentEdit();
+
+        // clear on Esc
+        if (e.which == 27) {
+            this.value = "";
+        }
+
+        searchString = this.value;
+        dataView.refresh();
+    });
 });

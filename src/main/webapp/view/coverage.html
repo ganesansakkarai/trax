@@ -1,94 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Unit Test Coverage</title>
-<link type="text/css" rel="stylesheet" href="../asset/css/coverage.css" />
-<link type="text/css" rel="stylesheet" href="../asset/css/demo_table_jui.css" />
-<link type="text/css" rel="stylesheet" href="../asset/themes/smoothness/jquery-ui-1.8.4.custom.css" />
-<link type="text/css" rel="stylesheet" 	href="../asset/css/jquery.selectBoxIt.css" />
-	
-<script type="text/javascript" src="../asset/js/jquery.js"></script>
-<script type="text/javascript" src="../asset/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="../asset/js/coverage.js"></script>
-<script src="../asset/js/jquery-ui.min.js"></script>
-<script src="../asset/js/jquery.selectBoxIt.min.js"></script>
-<script src="../asset/js/Chart.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <title>trax</title>
 
+    <link rel="stylesheet" href="../asset/css/style.css" type="text/css">
+    <link rel="stylesheet" href="../asset/css/slick.grid.css" type="text/css"/>
+    <link rel="stylesheet" href="../asset/themes/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
 </head>
-<body id="index">
 
-	<div id="testTabs">
-		<ul class="toogleSwitchUL">
-	   		<li id="codeCoverage" class="on"><a href="#">Code Coverage</a></li>
-	    	<li id="testResults"><a href="#">Test Results</a></li>
-		</ul>
-		<table id="selectTable">
-			<tr>
-				<td style="width:30%">Application</td>
-				<td><select id="applicationType"></select></td>
-			</tr>
-			<tr>
-				<td style="width:30%">Build Time</td>
-				<td><select id="builds"></select></td>
-			</tr>
-			<tr>
-				<td style="width:30%">TestType</td>
-				<td>
-				<select id="testType">
-					<option>UNIT</option>
-					<option>INTEGRATION</option>
-					<option>PERFORMANCE</option></select></td>
-			</tr>
-		</table>	
-		
-		<div id="coverageTabs">	
-		<canvas id="coverageChart" height="150" width="150"></canvas>
-			<table class="display" id="coverage" style="width: 100% !important;">
-				<thead>
-					<tr>
-						<th style="width: 73px;"></th>
-						<th id="id" style="display: none;">Id</th>
-						<th width="30%">Name</th>
-						<th width="10%">Coverage</th>
-						<th width="10%">Line Count</th>
-						<th width="10%">Missed Line</th>
-						<th width="10%">Branch Count</th>
-						<th width="10%">Missed Branch</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td colspan="5" class="dataTables_empty">Loading data from
-							server</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div id="testResultTabs">	
-		<canvas id="testResultChart" height="150" width="150"></canvas>
-			<table class="display" id="testResult" style="width: 100% !important;">
-				<thead>
-					<tr>
-						<th style="width: 73px;"></th>
-						<th id="id" style="display: none;">Id</th>
-						<th width="30%">Name</th>
-						<th width="10%">Duration</th>
-						<th width="10%">Pass</th>
-						<th width="10%">Fail</th>
-						<th width="10%">Skip</th>
-						<th width="10%">Success</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td colspan="5" class="dataTables_empty">Loading data from
-							server</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+<body>
+
+<div>
+    <label for="app">Application</label>
+    <select class="form-control" id="app"></select>
+</div>
+<div>
+    <label for="build">Build</label>
+    <select class="form-control" id="build"></select>
+</div>
+
+<div>
+    <label for="search">Search</label>
+    <input class="form-control" type=text id="search">
+</div>
+
+
+<div id="grid" style="width:900px;height:500px;"></div>
+
+
+<script src="../asset/js/jquery-1.7.min.js"></script>
+<script src="../asset/js/bootstrap.min.js"></script>
+<script src="../asset/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="../asset/js/jquery.event.drag-2.2.js"></script>
+<script src="../asset/js/slick.core.js"></script>
+<script src="../asset/js/slick.formatters.js"></script>
+<script src="../asset/js/slick.grid.js"></script>
+<script src="../asset/js/slick.dataview.js"></script>
+<script src="../asset/js/coverage.js"></script>
 </body>
 </html>

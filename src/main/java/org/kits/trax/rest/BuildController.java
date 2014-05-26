@@ -12,6 +12,7 @@ import org.kits.trax.domain.TestCoverage;
 import org.kits.trax.domain.TestResult;
 import org.kits.trax.domain.TestSuite;
 import org.kits.trax.service.BuildService;
+import org.kits.trax.util.DateUtil;
 import org.kits.trax.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,29 +73,35 @@ public class BuildController {
 		return response;
 	}
 
-	@RequestMapping(value = "/apps", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/apps", method = RequestMethod.GET, headers = "Accept=application/json")
 	public ResponseEntity<String> listApplications() {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		List<String> result = buildService.listApplications();
-		String jsonData = JsonUtil.toJsonArray(result);
+		List<String> applications = buildService.listApplications();
+		String jsonData = JsonUtil.toJsonArray(applications);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
-
 		return response;
 	}
 
-	@RequestMapping(value = "/app/{name}/builds", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/app/{name}/builds", method = RequestMethod.GET, headers = "Accept=application/json")
 	public ResponseEntity<String> listBuilds(@PathVariable("name") String name) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		List<Build> result = buildService.listBuilds(name);
-		String jsonData = JsonUtil.toJsonArray(result);
+		List<Build> builds = buildService.listBuilds(name);
+		List<AppBuild> appBuilds = new ArrayList<>();
+		for (Build build : builds) {
+			AppBuild appBuild = new AppBuild();
+			appBuild.setId(build.getId());
+			appBuild.setDate(DateUtil.toString(build.getTimeStamp()));
+			appBuilds.add(appBuild);
+		}
+		String jsonData = JsonUtil.toJsonArray(appBuilds);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
@@ -109,6 +116,9 @@ public class BuildController {
 		LOGGER.info("Listing modules for build " + id);
 		Build build = buildService.findBuild(id);
 		List<Coverage> coverages = getCoverages(build);
+		for(Build module: build.getModules()) {
+			coverages.addAll(getCoverages(module));
+		}
 		String jsonData = JsonUtil.toJsonArray(coverages);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
@@ -124,6 +134,9 @@ public class BuildController {
 		LOGGER.info("Listing modules for build " + id);
 		Build build = buildService.findBuild(id);
 		List<Result> results = getResult(build);
+		for(Build module : build.getModules()) {
+			results.addAll(getResult(module));
+		}
 		String jsonData = JsonUtil.toJsonArray(results);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
@@ -178,10 +191,10 @@ public class BuildController {
 				}
 			}
 		}
-		
+
 		return coverages;
 	}
-	
+
 	private List<Result> getResult(Build build) {
 
 		List<Result> results = new ArrayList<>();
@@ -197,7 +210,7 @@ public class BuildController {
 			moduleResult.setFail(testResult.getFail());
 			moduleResult.setSkip(testResult.getSkip());
 			double total = moduleResult.getPass() + moduleResult.getFail() + moduleResult.getSkip();
-			moduleResult.setSuccess(moduleResult.getPass()/total * 100);
+			moduleResult.setSuccess(moduleResult.getPass() / total * 100);
 			results.add(moduleResult);
 
 			for (TestSuite testSuite : testResult.getTestSuites()) {
@@ -211,8 +224,8 @@ public class BuildController {
 				suiteResult.setPass(testSuite.getPass());
 				suiteResult.setFail(testSuite.getFail());
 				suiteResult.setSkip(testSuite.getSkip());
-				total = suiteResult.getPass() + suiteResult.getFail() + suiteResult.getSkip();				
-				suiteResult.setSuccess(suiteResult.getPass()/total * 100);
+				total = suiteResult.getPass() + suiteResult.getFail() + suiteResult.getSkip();
+				suiteResult.setSuccess(suiteResult.getPass() / total * 100);
 				results.add(suiteResult);
 
 				for (TestCase testCase : testSuite.getTestCases()) {
@@ -226,7 +239,7 @@ public class BuildController {
 				}
 			}
 		}
-		
+
 		return results;
 	}
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BuildRepository extends PagingAndSortingRepository<Build, Long> {
 	
-	@Query("select distinct b.name from Build b where b.parent is null")
+	@Query("select distinct(b.name) from Build b where b.parent is null")
 	public List<String> listApplications();
 
 	@Query("select new org.kits.trax.domain.Build(b.id, b.name, b.timeStamp) from Build b where b.name = :name and b.parent is null")

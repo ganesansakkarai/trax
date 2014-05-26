@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Build {
@@ -21,6 +23,7 @@ public class Build {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date timeStamp;
 	private String name;
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -39,8 +42,15 @@ public class Build {
 		testResults = new ArrayList<>();
 		testCoverages = new ArrayList<>();
 	}
+	
+	public Build(Long id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
 	public Build(Long id, String name, Date timeStamp) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.timeStamp = timeStamp;

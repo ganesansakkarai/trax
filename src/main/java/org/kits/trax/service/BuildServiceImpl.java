@@ -44,55 +44,62 @@ public class BuildServiceImpl implements BuildService {
 
 		for (TestCoverage testCoverage : build.getTestCoverages()) {
 			process(testCoverage);
-			boolean found = false;
+			TestCoverage aCoverage = null;
 			if (id != null) {
 				for (TestCoverage coverage : parent.getTestCoverages()) {
 					if(coverage.getTestType().equals(testCoverage.getTestType())) {
-						found = true;
-						coverage.setLine(testCoverage.getLine() + coverage.getLine());
-						coverage.setMissedLine(testCoverage.getMissedLine() + coverage.getMissedLine());
-						coverage.setCoverage((coverage.getLine() - coverage.getMissedLine()) / coverage.getLine() * 100);
-						coverage.setBranch(testCoverage.getBranch() + coverage.getBranch());
-						coverage.setMissedBranch(testCoverage.getMissedBranch() + coverage.getMissedBranch());
+						aCoverage = coverage;
 					}
 				}
 				
-				if(!found) {
-					parent.getTestCoverages().add(testCoverage);
+				if(aCoverage == null) {
+					aCoverage = new TestCoverage();
+					parent.getTestCoverages().add(aCoverage);
 				}
+				
+				aCoverage.setLine(testCoverage.getLine() + aCoverage.getLine());
+				aCoverage.setMissedLine(testCoverage.getMissedLine() + aCoverage.getMissedLine());
+				aCoverage.setCoverage((aCoverage.getLine() - aCoverage.getMissedLine()) / aCoverage.getLine() * 100);
+				aCoverage.setBranch(testCoverage.getBranch() + aCoverage.getBranch());
+				aCoverage.setMissedBranch(testCoverage.getMissedBranch() + aCoverage.getMissedBranch());
+				aCoverage.setTestType(testCoverage.getTestType());
 			}
 		}
 
 		for (TestResult testResult : build.getTestResults()) {
 			processTestResult(testResult);
-			boolean found = false;
+			TestResult aResult = null;
 			if (id != null) {
 				for (TestResult result : parent.getTestResults()) {
 					if(result.getTestType().equals(testResult.getTestType())) {
-						found = true;
-						result.setDuration(testResult.getDuration() + result.getDuration());
-						result.setPass(testResult.getPass() + result.getPass());
-						result.setSkip(testResult.getSkip() + result.getSkip());
-						result.setFail(testResult.getFail() + result.getFail());
-						result.setSuccess(result.getPass() / (result.getPass() + result.getSkip() + result.getFail()) * 100);
+						aResult = result;
 					}
 				}
 				
-				if(!found) {
-					parent.getTestResults().add(testResult);
+				if(aResult == null) {
+					aResult = new TestResult();
+					parent.getTestResults().add(aResult);
 				}
+				
+				aResult.setDuration(testResult.getDuration() + aResult.getDuration());
+				aResult.setTestType(testResult.getTestType());
+				aResult.setPass(testResult.getPass() + aResult.getPass());
+				aResult.setSkip(testResult.getSkip() + aResult.getSkip());
+				aResult.setFail(testResult.getFail() + aResult.getFail());
+				aResult.setSuccess(aResult.getPass() / (aResult.getPass() + aResult.getSkip() + aResult.getFail()) * 100);
 			}
 		}
 
-		buildRepository.save(parent);
 		build.setParent(parent);
 		buildRepository.save(build);
+		parent.getModules().add(build);
+		buildRepository.save(parent);		
 		return build;
 	}
 
 	public List<String> listApplications() {
 
-		return (List<String>) buildRepository.listApplications();
+		return buildRepository.listApplications();
 	}
 
 	public List<Build> listBuilds(String name) {

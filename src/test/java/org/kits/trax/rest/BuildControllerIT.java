@@ -81,9 +81,9 @@ public class BuildControllerIT {
 	public void listApplications() throws Exception {
 
 		saveMultiModuleBuild();
-		HttpResponse response = HttpUtil.post(url + "apps");
+		HttpResponse response = HttpUtil.get(url + "apps");
 		Assert.assertNotNull(response);
-		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+		Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
 		List<String> data = JsonUtil.fromJsonArray(String.class, jsonData);
 		Assert.assertTrue(data.size() > 0);
@@ -93,11 +93,11 @@ public class BuildControllerIT {
 	public void listBuilds() throws Exception {
 
 		Build build = saveMultiModuleBuild();
-		HttpResponse response = HttpUtil.post(url + "app/" + build.getParent().getName() + "/builds");
+		HttpResponse response = HttpUtil.get(url + "app/" + build.getParent().getName() + "/builds");
 		Assert.assertNotNull(response);
-		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
+		Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
-		List<Build> data = JsonUtil.fromJsonArray(Build.class, jsonData);
+		List<AppBuild> data = JsonUtil.fromJsonArray(AppBuild.class, jsonData);
 		Assert.assertTrue(data.size() > 0);
 	}
 
@@ -110,7 +110,7 @@ public class BuildControllerIT {
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
 		List<Coverage> data = JsonUtil.fromJsonArray(Coverage.class, jsonData);
-		Assert.assertTrue(data.size() == 12);
+		Assert.assertTrue(data.size() == 13);
 	}
 	
 	@Test
@@ -122,7 +122,7 @@ public class BuildControllerIT {
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());
 		List<Result> data = JsonUtil.fromJsonArray(Result.class, jsonData);
-		Assert.assertTrue(data.size() == 12);
+		Assert.assertTrue(data.size() == 13);
 	}	
 	
 	@Test
