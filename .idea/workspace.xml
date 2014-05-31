@@ -2,68 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cd46dbd8-145f-463f-9c94-cfb8a27ddeb5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/asset/css/bootstrap-theme.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/asset/css/bootstrap.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/bootstrap.min.js" />
-      <change type="DELETED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\Chart.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\jquery.dataTables.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\jquery.selectBoxIt.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\dev\works\trax\src\main\webapp\view\cover.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\dev\works\trax\src\main\webapp\view\result.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\dev\works\trax\src\main\webapp\view\test\coverage.html" afterPath="" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\actions.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/actions.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\ajax-loader-small.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/ajax-loader-small.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\arrow_redo.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/arrow_redo.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\arrow_right_peppermint.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/arrow_right_peppermint.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\arrow_right_spearmint.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/arrow_right_spearmint.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\arrow_undo.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/arrow_undo.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\bullet_blue.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/bullet_blue.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\bullet_star.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/bullet_star.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\bullet_toggle_minus.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/bullet_toggle_minus.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\bullet_toggle_plus.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/bullet_toggle_plus.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\calendar.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/calendar.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\collapse.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/collapse.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\comment_yellow.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/comment_yellow.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\down.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/down.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\drag-handle.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/drag-handle.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\editor-helper-bg.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/editor-helper-bg.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\expand.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/expand.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\header-bg.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/header-bg.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\header-columns-bg.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/header-columns-bg.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\header-columns-over-bg.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/header-columns-over-bg.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\help.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/help.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\info.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/info.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\listview.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/listview.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\pencil.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/pencil.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\row-over-bg.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/row-over-bg.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\sort-asc.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/sort-asc.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\sort-asc.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/sort-asc.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\sort-desc.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/sort-desc.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\sort-desc.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/sort-desc.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\stripes.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/stripes.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\tag_red.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/tag_red.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\tick.png" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/tick.png" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\user_identity.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/user_identity.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\css\images\user_identity_plus.gif" afterPath="$PROJECT_DIR$/src/main/webapp/asset/images/user_identity_plus.gif" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\grid\slick.core.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/slick.core.js" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\grid\slick.dataview.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/slick.dataview.js" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\grid\slick.formatters.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/slick.formatters.js" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\grid\slick.grid.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/slick.grid.js" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\jquery\jquery-1.7.min.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/jquery-1.7.min.js" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\jquery\jquery-ui-1.8.16.custom.min.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/jquery-ui-1.8.16.custom.min.js" />
-      <change type="MOVED" beforePath="C:\dev\works\trax\src\main\webapp\asset\js\jquery\jquery.event.drag-2.2.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/jquery.event.drag-2.2.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/kits/trax/domain/Build.java" afterPath="$PROJECT_DIR$/src/main/java/org/kits/trax/domain/Build.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/kits/trax/rest/BuildController.java" afterPath="$PROJECT_DIR$/src/main/java/org/kits/trax/rest/BuildController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/kits/trax/rest/BuildControllerIT.java" afterPath="$PROJECT_DIR$/src/test/java/org/kits/trax/rest/BuildControllerIT.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/kits/trax/repository/BuildRepository.java" afterPath="$PROJECT_DIR$/src/main/java/org/kits/trax/repository/BuildRepository.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/kits/trax/service/BuildServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/org/kits/trax/service/BuildServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/kits/trax/rest/Coverage.java" afterPath="$PROJECT_DIR$/src/main/java/org/kits/trax/rest/Coverage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/kits/trax/util/DateUtil.java" afterPath="$PROJECT_DIR$/src/main/java/org/kits/trax/util/DateUtil.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/view/coverage.html" afterPath="$PROJECT_DIR$/src/main/webapp/view/coverage.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js" afterPath="$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/asset/css/examples.css" afterPath="$PROJECT_DIR$/src/main/webapp/asset/css/examples.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/asset/css/slick-default-theme.css" afterPath="$PROJECT_DIR$/src/main/webapp/asset/css/slick-default-theme.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/asset/css/slick.grid.css" afterPath="$PROJECT_DIR$/src/main/webapp/asset/css/slick.grid.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/asset/css/style.css" afterPath="$PROJECT_DIR$/src/main/webapp/asset/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="trax.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -86,14 +34,42 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="coverage.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="coverage.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.23827392" vertical-offset="111" max-vertical-offset="867">
-              <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
-              <folding>
-                <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-9.346154" vertical-offset="250" max-vertical-offset="833">
+              <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4352">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="examples.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/examples.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3995">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="coverage.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.63711" vertical-offset="2706" max-vertical-offset="3315">
+              <caret line="182" column="38" selection-start-line="182" selection-start-column="38" selection-end-line="182" selection-end-column="38" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -113,8 +89,9 @@
       <list>
         <option value="$PROJECT_DIR$/src/main/webapp/asset/js/chart/coverage.js" />
         <option value="$PROJECT_DIR$/src/main/webapp/asset/js/test/coverage.js" />
-        <option value="$PROJECT_DIR$/src/main/webapp/asset/css/examples.css" />
         <option value="$PROJECT_DIR$/src/main/webapp/view/test/coverage.html" />
+        <option value="$PROJECT_DIR$/src/main/webapp/asset/css/examples.css" />
+        <option value="$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js" />
         <option value="$PROJECT_DIR$/src/main/webapp/asset/css/style.css" />
         <option value="$PROJECT_DIR$/src/main/webapp/view/coverage.html" />
       </list>
@@ -320,6 +297,10 @@
               <option name="myItemId" value="asset" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="images" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -436,7 +417,7 @@
     <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" working-dir="">
       <method />
     </configuration>
-    <configuration default="false" name="coverage" type="JavascriptDebugType" factoryName="JavaScript Debug" uri="http://localhost:8080/view/test/coverage.html">
+    <configuration default="false" name="coverage" type="JavascriptDebugType" factoryName="JavaScript Debug" engineId="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" uri="http://localhost:8080/view/coverage.html">
       <RunnerSettings RunnerId="JavascriptDebugRunner" />
       <ConfigurationWrapper RunnerId="JavascriptDebugRunner" />
       <method />
@@ -459,7 +440,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -501,29 +482,182 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js</url>
-          <line>60</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js</url>
-          <line>59</line>
-          <option name="timeStamp" value="3" />
+          <line>4</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="4" />
+      <option name="time" value="6" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
       <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="250" max-vertical-offset="833">
+          <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4352">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/examples.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3995">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3094" max-vertical-offset="3315">
+          <caret line="182" column="38" selection-start-line="182" selection-start-column="38" selection-end-line="182" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="833">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="82" max-vertical-offset="4403">
+          <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/examples.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3995">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="783" max-vertical-offset="3298">
+          <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="833">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1377" max-vertical-offset="4403">
+          <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/examples.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3995">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2611" max-vertical-offset="3298">
+          <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="833">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="246" max-vertical-offset="4403">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/examples.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3995">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2967" max-vertical-offset="3502">
+          <caret line="191" column="28" selection-start-line="191" selection-start-column="28" selection-end-line="191" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="867">
+          <caret line="27" column="11" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="4284">
+          <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1697" max-vertical-offset="3383">
+          <caret line="151" column="29" selection-start-line="151" selection-start-column="29" selection-end-line="151" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="111" max-vertical-offset="867">
+          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
+      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="1411">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -544,9 +678,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1139">
           <caret line="33" column="14" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="14" />
-          <folding>
-            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -567,9 +699,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="935">
           <caret line="36" column="5" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
-          <folding>
-            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -599,9 +729,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="935">
           <caret line="36" column="5" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
-          <folding>
-            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -631,9 +759,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="935">
           <caret line="36" column="5" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
-          <folding>
-            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -673,21 +799,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/examples.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3995">
-          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="935" max-vertical-offset="2108">
-          <caret line="58" column="33" selection-start-line="58" selection-start-column="33" selection-end-line="58" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/bootstrap.min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.02852349" vertical-offset="0" max-vertical-offset="596">
@@ -707,21 +818,35 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/examples.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3995">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30706075" vertical-offset="0" max-vertical-offset="609">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4352">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/view/coverage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23827392" vertical-offset="111" max-vertical-offset="867">
-          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
-          <folding>
-            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="-9.346154" vertical-offset="250" max-vertical-offset="833">
+          <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/asset/js/coverage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.63711" vertical-offset="2706" max-vertical-offset="3315">
+          <caret line="182" column="38" selection-start-line="182" selection-start-column="38" selection-end-line="182" selection-end-column="38" />
+          <folding />
         </state>
       </provider>
     </entry>

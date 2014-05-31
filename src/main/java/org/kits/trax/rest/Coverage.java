@@ -2,9 +2,9 @@ package org.kits.trax.rest;
 
 public class Coverage {
 
-	private Integer id;
-	private Integer indent;
-	private Integer parent;
+	private Long id;
+	private Long indent;
+	private Long parent;
 	private String name;
 	private String type;
 	private Double coverage;
@@ -13,27 +13,27 @@ public class Coverage {
 	private Double branch;
 	private Double missedBranch;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getIndent() {
+	public Long getIndent() {
 		return indent;
 	}
 
-	public void setIndent(Integer indent) {
+	public void setIndent(Long indent) {
 		this.indent = indent;
 	}
 
-	public Integer getParent() {
+	public Long getParent() {
 		return parent;
 	}
 
-	public void setParent(Integer parent) {
+	public void setParent(Long parent) {
 		this.parent = parent;
 	}
 

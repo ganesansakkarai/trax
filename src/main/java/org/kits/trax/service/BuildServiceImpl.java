@@ -129,10 +129,11 @@ public class BuildServiceImpl implements BuildService {
 				method.setCoverage(((method.getLine() - method.getMissedLine()) / method.getLine()) * 100);
 			}
 
+			
 			testCoverage.setLine(testCoverage.getLine() + clazz.getLine());
 			testCoverage.setMissedLine(testCoverage.getMissedLine() + clazz.getMissedLine());
 			testCoverage.setBranch(testCoverage.getBranch() + clazz.getBranch());
-			testCoverage.setMissedBranch(testCoverage.getMissedBranch() + clazz.getMissedBranch());
+			testCoverage.setMissedBranch(testCoverage.getMissedBranch() + clazz.getMissedBranch());			
 			clazz.setCoverage(((clazz.getLine() - clazz.getMissedLine()) / clazz.getLine()) * 100);
 		}
 

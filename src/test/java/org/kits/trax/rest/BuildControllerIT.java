@@ -105,7 +105,7 @@ public class BuildControllerIT {
 	public void coverage() throws Exception {
 
 		Build build = saveMultiModuleBuild();
-		HttpResponse response = HttpUtil.post(url + "build/" + build.getParent().getId() + "/coverage");
+		HttpResponse response = HttpUtil.get(url + "build/" + build.getParent().getId() + "/coverage");
 		Assert.assertNotNull(response);
 		Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
 		String jsonData = IOUtils.toString(response.getEntity().getContent());

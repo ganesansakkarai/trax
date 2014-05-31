@@ -9,7 +9,7 @@ public class DateUtil {
 
 	public static String toString(Date date) {
 
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return df.format(date);
 	}
 

@@ -1,5 +1,6 @@
 package org.kits.trax.rest;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class BuildController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BuildController.class);
 	@Autowired
 	private BuildService buildService;
+	DecimalFormat format = new DecimalFormat("0.00");
 
 	@RequestMapping(value = "/build", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> saveBuild(@RequestBody String json) {
@@ -106,7 +108,7 @@ public class BuildController {
 		return response;
 	}
 
-	@RequestMapping(value = "/build/{id}/coverage", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/build/{id}/coverage", method = RequestMethod.GET, headers = "Accept=application/json")
 	public ResponseEntity<String> coverage(@PathVariable("id") Long id) throws ParseException {
 
 		ResponseEntity<String> response = null;
@@ -115,10 +117,8 @@ public class BuildController {
 
 		LOGGER.info("Listing modules for build " + id);
 		Build build = buildService.findBuild(id);
-		List<Coverage> coverages = getCoverages(build);
-		for(Build module: build.getModules()) {
-			coverages.addAll(getCoverages(module));
-		}
+		List<Coverage> coverages = new ArrayList<>();
+		getCoverages(0l, null, build, coverages);
 		String jsonData = JsonUtil.toJsonArray(coverages);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
@@ -142,18 +142,18 @@ public class BuildController {
 		return response;
 	}
 
-	private List<Coverage> getCoverages(Build build) {
-
-		List<Coverage> coverages = new ArrayList<>();
+	private void getCoverages(Long indent, Long parent, Build build, List<Coverage> coverages) {
+		
 		for (TestCoverage testCoverage : build.getTestCoverages()) {
-
 			Coverage moduleCoverage = new Coverage();
-			moduleCoverage.setId(coverages.size() + 1);
-			moduleCoverage.setIndent(0);
-			moduleCoverage.setParent(null);
+			moduleCoverage.setId(new Long(coverages.size()));
+			moduleCoverage.setIndent(indent);
+			if(parent != null) {
+				moduleCoverage.setParent(parent);
+			}
 			moduleCoverage.setName(build.getName());
 			moduleCoverage.setType(testCoverage.getTestType());
-			moduleCoverage.setCoverage(testCoverage.getCoverage());
+			moduleCoverage.setCoverage(Double.parseDouble(format.format(testCoverage.getCoverage())));
 			moduleCoverage.setLine(testCoverage.getLine());
 			moduleCoverage.setMissedLine(testCoverage.getMissedLine());
 			moduleCoverage.setBranch(testCoverage.getBranch());
@@ -163,12 +163,12 @@ public class BuildController {
 			for (Clazz clazz : testCoverage.getClazzes()) {
 
 				Coverage clazzCoverage = new Coverage();
-				clazzCoverage.setId(coverages.size() + 1);
-				clazzCoverage.setIndent(1);
+				clazzCoverage.setId(new Long(coverages.size()));
+				clazzCoverage.setIndent(moduleCoverage.getIndent() + 1);
 				clazzCoverage.setParent(moduleCoverage.getId());
 				clazzCoverage.setType(testCoverage.getTestType());
 				clazzCoverage.setName(clazz.getName());
-				clazzCoverage.setCoverage(clazz.getCoverage());
+				clazzCoverage.setCoverage(Double.parseDouble(format.format(clazz.getCoverage())));
 				clazzCoverage.setLine(clazz.getLine());
 				clazzCoverage.setMissedLine(clazz.getMissedLine());
 				clazzCoverage.setBranch(clazz.getBranch());
@@ -177,12 +177,12 @@ public class BuildController {
 
 				for (Method method : clazz.getMethods()) {
 					Coverage methodCoverage = new Coverage();
-					methodCoverage.setId(coverages.size() + 1);
-					methodCoverage.setIndent(2);
+					methodCoverage.setId(new Long(coverages.size()));
+					methodCoverage.setIndent(clazzCoverage.getIndent() + 1);
 					methodCoverage.setParent(clazzCoverage.getId());
 					methodCoverage.setName(method.getName());
 					methodCoverage.setType(testCoverage.getTestType());
-					methodCoverage.setCoverage(method.getCoverage());
+					methodCoverage.setCoverage(Double.parseDouble(format.format(method.getCoverage())));
 					methodCoverage.setLine(method.getLine());
 					methodCoverage.setMissedLine(method.getMissedLine());
 					methodCoverage.setBranch(method.getBranch());
@@ -190,9 +190,13 @@ public class BuildController {
 					coverages.add(methodCoverage);
 				}
 			}
-		}
-
-		return coverages;
+			
+			if(build.getModules() != null) {
+				for(Build module: build.getModules()) {
+					getCoverages(indent + 1, moduleCoverage.getId(), module, coverages);
+				}
+			}
+		}		
 	}
 
 	private List<Result> getResult(Build build) {

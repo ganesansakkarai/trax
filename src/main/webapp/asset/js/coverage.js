@@ -23,9 +23,9 @@ var columns = [
     {id: "type", name: "Type", field: "type"},
     {id: "coverage", name: "Coverage", field: "coverage"},
     {id: "line", name: "Line", field: "line"},
-    {id: "mline", name: "Missed Line", field: "mline"},
+    {id: "missedLine", name: "Missed Line", field: "missedLine"},
     {id: "branch", name: "Branch", field: "branch"},
-    {id: "mbranch", name: "Missed Branch", field: "mbranch", width: 100}
+    {id: "missedBranch", name: "Missed Branch", field: "missedBranch", width: 100}
 ];
 
 var options = {};
@@ -38,7 +38,7 @@ function myFilter(item) {
         return false;
     }
 
-    if (item.parent != null) {
+    if (item.parent != null) {// initialize the model
         var parent = data[item.parent];
 
         while (parent) {
@@ -55,26 +55,18 @@ function myFilter(item) {
 
 $(function () {
 
-    var response = null;
-    $.post("http://localhost:8080/app/single/builds", function(data) {
-       response = data;
-       alert("Data : " + response);
-    });
+    var appUrl = 'http://localhost:8080/apps/'
+    var buildUrl = 'http://localhost:8080/app/'
+    var coverageUrl = 'http://localhost:8080/build/';
+    var selectedApp;
+    var selectedBuild;
+    var response;
 
-    // prepare the data
-    data[0] = {id: 'id_' + 1, indent:0, parent:null, type: "Unit", name:"Sample", coverage:80.0, line:10, mline:0, branch:3, mbranch:2};
-    data[1] = {id: 'id_' + 2, indent:1, parent:0, type: "Unit", name:"Util", coverage:80.0, line:10, mline:0, branch:3, mbranch:2};
-    data[2] = {id: 'id_' + 3, indent:2, parent:1, type: "Unit", name:"org.kits.trax.HttpUtil", coverage:80.0, line:10, mline:0, branch:3, mbranch:2};
-
-    // initialize the model
     dataView = new Slick.Data.DataView({ inlineFilters: true });
-    dataView.beginUpdate();
-    dataView.setItems(data);
     dataView.setFilter(myFilter);
-    dataView.endUpdate();
 
     // initialize the grid
-    grid = new Slick.Grid("#myGrid", dataView, columns, options);
+    grid = new Slick.Grid("#grid", dataView, columns, options);
 
     grid.onClick.subscribe(function (e, args) {
         if ($(e.target).hasClass("toggle")) {
@@ -116,4 +108,83 @@ $(function () {
         searchString = this.value;
         dataView.refresh();
     });
+
+    $.ajax({
+        dataType : "json",
+        type : 'GET',
+        async : false ,
+        url : appUrl ,
+        success : function(responseObject) {
+            var applications = $("#app");
+            applications.empty();
+            $.each(responseObject, function(index, value) {
+                applications.append('<option value="' + value + '">' + value + '</option>');
+            });
+
+            if (selectedApp == undefined) {
+                selectedApp = $("#app option:first").val();
+            }
+            loadBuild();
+        },
+        error : function(xhr, status, error) {
+            alert('failed : ' + error.Message);
+        }
+    });
+
+    $("#app").change(function() {
+
+        $("#app option:selected").each(function() {
+            selectedApp = $(this).text();
+        });
+        loadBuild();
+    })
+
+    function loadBuild() {
+
+        $.ajax({
+            dataType : "json",
+            type : 'GET',
+            async : false,
+            url : buildUrl + selectedApp + '/' + 'builds',
+            success : function(responseObject) {
+                var builds = $("#build");
+                builds.empty();
+                $.each(responseObject, function(index, value) {
+                    builds.append('<option value="' + value.id + '">' + value.date + '</option>');
+                });
+
+                if (selectedBuild == undefined) {
+                    selectedBuild = $("#build option:first").val();
+                    loadCoverage();
+                }
+
+
+                //refreshTestResults();
+            }
+        });
+    }
+
+    $("#build").change(function() {
+
+        $("#build option:selected").each(function() {
+            selectedBuild = $(this).val();
+            loadCoverage();
+            //refreshTestResults();
+        });
+    })
+
+    function loadCoverage() {
+        $.ajax({
+            type : 'GET',
+            url : coverageUrl + selectedBuild + '/coverage',
+            dataType : 'json',
+            success : function(responseObject) {
+                data = responseObject;
+                dataView.setItems(data);
+            },
+            error : function(xhr, status, error) {
+                alert('failed : ' + error.Message);
+            }
+        });
+    }
 });
