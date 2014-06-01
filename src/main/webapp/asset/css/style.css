@@ -1,3 +1,39 @@
+.row {
+    width: 1024px;
+}
+
+.left {
+    float: left;
+    width: 33%;
+    padding: 10px;
+}
+
+.right {
+    float: left;
+    width: 33%;
+    padding: 10px;
+}
+
+.field {
+    padding: 2px;
+}
+
+.field-group {
+    display: inline;
+}
+
+.field label {
+    font-size:13px;
+    float:left;
+    width:150px;
+    text-align:left;
+}
+
+#grid {
+    clear: both;
+    width: 1024px;
+    height: 500px;
+}
 
 .cell-title {
     font-weight: bold;
@@ -25,8 +61,8 @@
 }
 
 body {
-    padding: 0;
-    margin: 8px;
+    padding: 10px;
+    margin: 10px;
 }
 
 h2 {
