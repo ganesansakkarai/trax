@@ -1,5 +1,5 @@
 
-var TaskNameFormatter = function (row, cell, value, columnDef, dataContext) {
+var NameFormatter = function (row, cell, value, columnDef, dataContext) {
     value = value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     var spacer = "<span style='display:inline-block;height:1px;width:" + (15 * dataContext["indent"]) + "px'></span>";
     var idx = dataView.getIdxById(dataContext.id);
@@ -14,14 +14,23 @@ var TaskNameFormatter = function (row, cell, value, columnDef, dataContext) {
     }
 };
 
+var CoverageFormatter = function (row, cell, value, columnDef, dataContext) {
+    if (value < 80) {
+        return "<span class='low'>" + value + "</span>";
+    }
+    else {
+        return "<span class='high'>" + value + "</span>";
+    }
+};
+
 var dataView;
 var grid;
 var data = [];
 
 var columns = [
-    {id: "name", name: "Name", field: "name", cssClass: "cell-title", formatter: TaskNameFormatter, width:500},
+    {id: "name", name: "Name", field: "name", cssClass: "cell-title", formatter: NameFormatter, width:500},
     {id: "type", name: "Type", field: "type"},
-    {id: "coverage", name: "Coverage", field: "coverage"},
+    {id: "coverage", name: "Coverage %", field: "coverage", formatter: CoverageFormatter},
     {id: "line", name: "Line", field: "line"},
     {id: "missedLine", name: "Missed Line", field: "missedLine"},
     {id: "branch", name: "Branch", field: "branch"},
@@ -29,25 +38,14 @@ var columns = [
 ];
 
 var options = {};
-
+var searchType = "";
 var searchString = "";
 
-function myFilter(item) {
+function filter(item) {
 
-    if (searchString != "" && item["name"].indexOf(searchString) == -1) {
+    if (searchString != "" && ((((searchType == 'class' && item["indent"] == 1) || (searchType == 'method' && item["indent"] == 2)) &&
+        item["name"].indexOf(searchString) == -1)) || (searchType == 'coverage' && item["coverage"] > new Number(searchString))) {
         return false;
-    }
-
-    if (item.parent != null) {// initialize the model
-        var parent = data[item.parent];
-
-        while (parent) {
-            if (parent._collapsed || (searchString != "" && parent["name"].indexOf(searchString) == -1)) {
-                return false;
-            }
-
-            parent = data[parent.parent];
-        }
     }
 
     return true;
@@ -63,7 +61,7 @@ $(function () {
     var response;
 
     dataView = new Slick.Data.DataView({ inlineFilters: true });
-    dataView.setFilter(myFilter);
+    dataView.setFilter(filter);
 
     // initialize the grid
     grid = new Slick.Grid("#grid", dataView, columns, options);
@@ -97,7 +95,7 @@ $(function () {
     });
 
     // wire up the search textbox to apply the filter to the model
-    $("#txtSearch").keyup(function (e) {
+    $("#search").keyup(function (e) {
         Slick.GlobalEditorLock.cancelCurrentEdit();
 
         // clear on Esc
@@ -105,6 +103,7 @@ $(function () {
             this.value = "";
         }
 
+        searchType = $('input[name=searchType]:checked').val();
         searchString = this.value;
         dataView.refresh();
     });

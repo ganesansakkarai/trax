@@ -53,6 +53,16 @@
     background: url(../images/collapse.gif) no-repeat center center;
 }
 
+.high {
+    color: green;
+    font-weight: bold;
+}
+
+.low {
+    color: red;
+    font-weight: bold;
+}
+
 @import url('slick-default-theme.css');
 
 * {
