@@ -9,6 +9,8 @@ public interface BuildService {
 	public List<String> listApplications();
 
 	public List<Build> listBuilds(String name);
+	
+	public List<Build> listCoverages(String name);
 
 	public Build findBuild(Long id);
 

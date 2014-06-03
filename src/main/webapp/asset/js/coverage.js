@@ -44,7 +44,7 @@ var searchString = "";
 function filter(item) {
 
     if (searchString != "" && ((((searchType == 'class' && item["indent"] == 1) || (searchType == 'method' && item["indent"] == 2)) &&
-        item["name"].indexOf(searchString) == -1)) || (searchType == 'coverage' && item["coverage"] > new Number(searchString))) {
+        item["name"].indexOf(searchString) == -1) || (searchType == 'coverage' && item["coverage"] > new Number(searchString)))) {
         return false;
     }
 
@@ -186,4 +186,26 @@ $(function () {
             }
         });
     }
+
+    var ajaxDataRenderer = function(url, plot, options) {
+        var ret = null;
+        $.ajax({
+            async: false,
+            url: url,
+            dataType:"json",
+            success: function(data) {
+                ret = data;
+            }
+        });
+        return ret;
+    };
+
+    var plot2 = $.jqplot('chart2', buildUrl + selectedApp + '/coverage/trend',{
+        dataRenderer: ajaxDataRenderer,
+        axes:{
+            xaxis:{
+                tickOptions:{showLabel: false}
+            }
+        }
+    });
 });

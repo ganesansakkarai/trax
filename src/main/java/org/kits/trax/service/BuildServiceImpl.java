@@ -11,6 +11,7 @@ import org.kits.trax.domain.TestResult;
 import org.kits.trax.domain.TestSuite;
 import org.kits.trax.repository.BuildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -174,4 +175,11 @@ public class BuildServiceImpl implements BuildService {
 		testResult.setSuccess(testResult.getPass()
 		        / (testResult.getPass() + testResult.getFail() + testResult.getSkip()) * 100);
 	}
+
+	@Override
+    public List<Build> listCoverages(String name) {
+	    
+		List<Build> builds = buildRepository.listCoverages(name, new PageRequest(0, 5));
+	    return builds;
+    }
 }

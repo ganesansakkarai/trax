@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../asset/css/style.css" type="text/css">
     <link rel="stylesheet" href="../asset/css/slick.grid.css" type="text/css"/>
     <link rel="stylesheet" href="../asset/themes/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" hrf="../asset/css/jquery.jqplot.min.css" />
 </head>
 
 <body>
@@ -30,7 +31,7 @@
     </div>
 </div>
 
-<div class="right">
+<div class="left">
     <div class="field">
         <label>Search Type</label>
         <input type="radio" name="searchType" value="class" checked="true">Class
@@ -42,14 +43,16 @@
         <input type=text id="search">
     </div>
 </div>
+
+<div class="left">
+    <div id="chart2" style="height:75px; width:350px;"></div>
 </div>
+</div>
+
 
 <br>
 
 <div class="grid">
-    <div class="grid-header" style="width:100%">
-        <label>Code Coverage</label>
-    </div>
     <div id="grid"></div>
 </div>
 
@@ -61,6 +64,8 @@
 <script src="../asset/js/slick.grid.js"></script>
 <script src="../asset/js/slick.dataview.js"></script>
 <script src="../asset/js/coverage.js"></script>
+<script type="text/javascript" src="../asset/js/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="../asset/js/jqplot.json2.min.js"></script>
 
 </body>
 </html>

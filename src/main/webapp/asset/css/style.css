@@ -1,4 +1,9 @@
+body {
+    margin: 0px;
+}
+
 #header {
+    position: 0;
     background-color: gray;
     color: white;
     width: 100%;
@@ -17,7 +22,7 @@
 
 .left {
     float: left;
-    width: 33%;
+    width: 300px;
     padding: 10px;
 }
 
@@ -38,13 +43,14 @@
 .field label {
     font-size:13px;
     float:left;
-    width:150px;
+    width:100px;
     text-align:left;
 }
 
 .grid {
     clear: both;
     width: 1024px;
+    margin: 10px;
 }
 
 #grid {

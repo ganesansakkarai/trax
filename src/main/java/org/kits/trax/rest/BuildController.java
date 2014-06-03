@@ -266,14 +266,28 @@ public class BuildController {
 		return response;
 	}
 
-	@RequestMapping(value = "/build/{id}/coverage/summary", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> coverageSummary(@PathVariable("id") Long id) {
+	@RequestMapping(value = "/app/{name}/coverage/trend", method = RequestMethod.GET, headers = "Accept=application/json")
+	public ResponseEntity<String> coverageTrend(@PathVariable("name") String name) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-		Build build = buildService.findBuild(id);
-		String jsonData = JsonUtil.toJsonArray(build.getTestCoverages());
+		List<Build> builds = buildService.listCoverages(name);
+		List coverages = new ArrayList<>();
+		List unitCoverages = new ArrayList<>();
+		List integrationCoverages = new ArrayList<>();
+		coverages.add(unitCoverages);
+		coverages.add(integrationCoverages);
+		for(Build build : builds) {
+			for(TestCoverage testCoverage : build.getTestCoverages()) {
+				if(testCoverage.getTestType().equalsIgnoreCase("Unit")) {
+					unitCoverages.add(testCoverage.getCoverage());
+				} else if(testCoverage.getTestType().equalsIgnoreCase("Integration")) {
+					integrationCoverages.add(testCoverage.getCoverage());
+				}
+			}
+		}
+		String jsonData = JsonUtil.toJsonArray(coverages);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
