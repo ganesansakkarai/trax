@@ -14,7 +14,7 @@ public interface BuildService {
 
 	public Build findBuild(Long id);
 
-	public Build saveModule(Long id, Build build);
+	public Build saveModule(String name, Build build);
 	
 	public Build saveBuild(Build build);
 

@@ -20,4 +20,7 @@ public interface BuildRepository extends PagingAndSortingRepository<Build, Long>
 	
 	@Query("select b from Build b where b.name = :name and b.parent is null")
 	public List<Build> listCoverages(@Param("name") String name, Pageable pageable);
+	
+	@Query("select max(b.id) from Build b where b.name = :name and b.parent is null")
+	public Long findLatest(@Param("name") String name);
 }

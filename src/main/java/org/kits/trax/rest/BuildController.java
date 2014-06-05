@@ -55,8 +55,8 @@ public class BuildController {
 		return response;
 	}
 
-	@RequestMapping(value = "/build/{id}/module", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> saveModule(@PathVariable Long id, @RequestBody String json) {
+	@RequestMapping(value = "/build/{name}/module", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> saveModule(@PathVariable String name, @RequestBody String json) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
@@ -64,7 +64,7 @@ public class BuildController {
 
 		try {
 			Build build = JsonUtil.fromJson(Build.class, json);
-			build = buildService.saveModule(id, build);
+			build = buildService.saveModule(name, build);
 			String jsonData = JsonUtil.toJson(build);
 			response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		} catch (Exception e) {

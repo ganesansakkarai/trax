@@ -51,7 +51,7 @@ public class BuildControllerIT {
 		Build root = saveRootModuleBuild();
 		Build module = TestDataUtil.getModuleBuild();
 		String jsonData = JsonUtil.toJson(module);
-		HttpResponse response = HttpUtil.post(url + "build/" + root.getId() + "/module", jsonData);
+		HttpResponse response = HttpUtil.post(url + "build/" + root.getName() + "/module", jsonData);
 		jsonData = IOUtils.toString(response.getEntity().getContent());
 		module = JsonUtil.fromJson(Build.class, jsonData);
 		return module;

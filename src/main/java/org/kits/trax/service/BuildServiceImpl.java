@@ -36,59 +36,52 @@ public class BuildServiceImpl implements BuildService {
 		return build;
 	}
 
-	public Build saveModule(Long id, Build build) {
+	public Build saveModule(String name, Build build) {
 
-		Build parent = null;
-		if (id != null) {
-			parent = buildRepository.findOne(id);
-		}
+		Build parent = buildRepository.findOne(buildRepository.findLatest(name));
 
 		for (TestCoverage testCoverage : build.getTestCoverages()) {
 			process(testCoverage);
 			TestCoverage aCoverage = null;
-			if (id != null) {
-				for (TestCoverage coverage : parent.getTestCoverages()) {
-					if(coverage.getTestType().equals(testCoverage.getTestType())) {
-						aCoverage = coverage;
-					}
+			for (TestCoverage coverage : parent.getTestCoverages()) {
+				if(coverage.getTestType().equals(testCoverage.getTestType())) {
+					aCoverage = coverage;
 				}
-				
-				if(aCoverage == null) {
-					aCoverage = new TestCoverage();
-					parent.getTestCoverages().add(aCoverage);
-				}
-				
-				aCoverage.setLine(testCoverage.getLine() + aCoverage.getLine());
-				aCoverage.setMissedLine(testCoverage.getMissedLine() + aCoverage.getMissedLine());
-				aCoverage.setCoverage((aCoverage.getLine() - aCoverage.getMissedLine()) / aCoverage.getLine() * 100);
-				aCoverage.setBranch(testCoverage.getBranch() + aCoverage.getBranch());
-				aCoverage.setMissedBranch(testCoverage.getMissedBranch() + aCoverage.getMissedBranch());
-				aCoverage.setTestType(testCoverage.getTestType());
 			}
+			
+			if(aCoverage == null) {
+				aCoverage = new TestCoverage();
+				parent.getTestCoverages().add(aCoverage);
+			}
+			
+			aCoverage.setLine(testCoverage.getLine() + aCoverage.getLine());
+			aCoverage.setMissedLine(testCoverage.getMissedLine() + aCoverage.getMissedLine());
+			aCoverage.setCoverage((aCoverage.getLine() - aCoverage.getMissedLine()) / aCoverage.getLine() * 100);
+			aCoverage.setBranch(testCoverage.getBranch() + aCoverage.getBranch());
+			aCoverage.setMissedBranch(testCoverage.getMissedBranch() + aCoverage.getMissedBranch());
+			aCoverage.setTestType(testCoverage.getTestType());
 		}
 
 		for (TestResult testResult : build.getTestResults()) {
 			processTestResult(testResult);
 			TestResult aResult = null;
-			if (id != null) {
-				for (TestResult result : parent.getTestResults()) {
-					if(result.getTestType().equals(testResult.getTestType())) {
-						aResult = result;
-					}
+			for (TestResult result : parent.getTestResults()) {
+				if(result.getTestType().equals(testResult.getTestType())) {
+					aResult = result;
 				}
-				
-				if(aResult == null) {
-					aResult = new TestResult();
-					parent.getTestResults().add(aResult);
-				}
-				
-				aResult.setDuration(testResult.getDuration() + aResult.getDuration());
-				aResult.setTestType(testResult.getTestType());
-				aResult.setPass(testResult.getPass() + aResult.getPass());
-				aResult.setSkip(testResult.getSkip() + aResult.getSkip());
-				aResult.setFail(testResult.getFail() + aResult.getFail());
-				aResult.setSuccess(aResult.getPass() / (aResult.getPass() + aResult.getSkip() + aResult.getFail()) * 100);
 			}
+			
+			if(aResult == null) {
+				aResult = new TestResult();
+				parent.getTestResults().add(aResult);
+			}
+			
+			aResult.setDuration(testResult.getDuration() + aResult.getDuration());
+			aResult.setTestType(testResult.getTestType());
+			aResult.setPass(testResult.getPass() + aResult.getPass());
+			aResult.setSkip(testResult.getSkip() + aResult.getSkip());
+			aResult.setFail(testResult.getFail() + aResult.getFail());
+			aResult.setSuccess(aResult.getPass() / (aResult.getPass() + aResult.getSkip() + aResult.getFail()) * 100);
 		}
 
 		build.setParent(parent);
@@ -161,7 +154,7 @@ public class BuildServiceImpl implements BuildService {
 					break;
 				}
 
-				testSuite.setDuration(testSuite.getDuration() + testCase.getDuration());
+				testSuite.setDuration(testSuite.getDuration() + testCase.getDuration());				
 			}
 
 			testResult.setPass(testResult.getPass() + testSuite.getPass());

@@ -30,7 +30,7 @@ public class BuildServiceTest {
 		Build root = TestDataUtil.getRootBuild();
 		root = buildService.saveBuild(root);
 		Build build = TestDataUtil.getModuleBuild();
-		build = buildService.saveModule(root.getId(), build);
+		build = buildService.saveModule(root.getName(), build);
 		Assert.assertTrue(build.getParent().getId() != null);
 	}
 
@@ -47,7 +47,7 @@ public class BuildServiceTest {
 		Build root = TestDataUtil.getRootBuild();
 		root = buildService.saveBuild(root);
 		Build build = TestDataUtil.getModuleBuild();
-		build = buildService.saveModule(root.getId(), build);
+		build = buildService.saveModule(root.getName(), build);
 		List<Build> builds = buildService.listBuilds(root.getName());
 		Assert.assertTrue(builds.size() > 0);
 	}
@@ -57,7 +57,7 @@ public class BuildServiceTest {
 		Build root = TestDataUtil.getRootBuild();
 		root = buildService.saveBuild(root);
 		Build build = TestDataUtil.getModuleBuild();
-		build = buildService.saveModule(root.getId(), build);
+		build = buildService.saveModule(root.getName(), build);
 		build = buildService.findBuild(root.getId());
 		
 		Assert.assertNotNull(build);
@@ -69,7 +69,7 @@ public class BuildServiceTest {
 		Build root = TestDataUtil.getRootBuild();
 		root = buildService.saveBuild(root);
 		Build build = TestDataUtil.getModuleBuild();
-		build = buildService.saveModule(root.getId(), build);
+		build = buildService.saveModule(root.getName(), build);
 		buildService.deleteBuild(root.getId());
 		root = buildService.findBuild(root.getId());
 		Assert.assertNull(root);
