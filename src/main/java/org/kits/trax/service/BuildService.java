@@ -10,7 +10,7 @@ public interface BuildService {
 
 	public List<Build> listBuilds(String name);
 	
-	public List<Build> listCoverages(String name);
+	public List<Build> listTrend(String name);
 
 	public Build findBuild(Long id);
 

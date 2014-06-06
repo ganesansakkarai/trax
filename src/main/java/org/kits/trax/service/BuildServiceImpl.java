@@ -170,9 +170,9 @@ public class BuildServiceImpl implements BuildService {
 	}
 
 	@Override
-    public List<Build> listCoverages(String name) {
+    public List<Build> listTrend(String name) {
 	    
-		List<Build> builds = buildRepository.listCoverages(name, new PageRequest(0, 5));
+		List<Build> builds = buildRepository.listTrend(name, new PageRequest(0, 5));
 	    return builds;
     }
 }

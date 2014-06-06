@@ -200,7 +200,7 @@ $(function () {
         return ret;
     };
 
-    var plot2 = $.jqplot('chart2', buildUrl + selectedApp + '/coverage/trend',{
+    var plot2 = $.jqplot('chart', buildUrl + selectedApp + '/coverage/trend',{
         dataRenderer: ajaxDataRenderer,
         axes:{
             xaxis:{

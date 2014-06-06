@@ -1,9 +1,15 @@
 package org.kits.trax.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class TestCase {
@@ -15,6 +21,16 @@ public class TestCase {
 	private String status;
 	private String log;
 	private double duration;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Input> inputs;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Output> outputs;
+	
+	public TestCase() {
+		
+		inputs = new ArrayList<>();
+		outputs = new ArrayList<>();
+	}
 
 	public Long getId() {
 		return id;
@@ -54,5 +70,21 @@ public class TestCase {
 
 	public void setDuration(double duration) {
 		this.duration = duration;
+	}
+
+	public List<Input> getInputs() {
+		return inputs;
+	}
+
+	public void setInputs(List<Input> inputs) {
+		this.inputs = inputs;
+	}
+
+	public List<Output> getOutputs() {
+		return outputs;
+	}
+
+	public void setOutputs(List<Output> outputs) {
+		this.outputs = outputs;
 	}
 }

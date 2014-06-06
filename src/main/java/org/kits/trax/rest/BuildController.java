@@ -34,6 +34,7 @@ public class BuildController {
 	@Autowired
 	private BuildService buildService;
 	DecimalFormat format = new DecimalFormat("0.00");
+	DecimalFormat nonDecimalFormat = new DecimalFormat("0");
 
 	@RequestMapping(value = "/build", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> saveBuild(@RequestBody String json) {
@@ -114,7 +115,6 @@ public class BuildController {
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-
 		LOGGER.info("Listing modules for build " + id);
 		Build build = buildService.findBuild(id);
 		List<Coverage> coverages = new ArrayList<>();
@@ -124,31 +124,28 @@ public class BuildController {
 		return response;
 	}
 
-	@RequestMapping(value = "/build/{id}/result", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/build/{id}/result", method = RequestMethod.GET, headers = "Accept=application/json")
 	public ResponseEntity<String> result(@PathVariable("id") Long id) throws ParseException {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-
 		LOGGER.info("Listing modules for build " + id);
 		Build build = buildService.findBuild(id);
-		List<Result> results = getResult(build);
-		for(Build module : build.getModules()) {
-			results.addAll(getResult(module));
-		}
+		List<Result> results = new ArrayList<>();
+		getResults(0l, null, build, results);
 		String jsonData = JsonUtil.toJsonArray(results);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
 
 	private void getCoverages(Long indent, Long parent, Build build, List<Coverage> coverages) {
-		
+
 		for (TestCoverage testCoverage : build.getTestCoverages()) {
 			Coverage moduleCoverage = new Coverage();
 			moduleCoverage.setId(new Long(coverages.size()));
 			moduleCoverage.setIndent(indent);
-			if(parent != null) {
+			if (parent != null) {
 				moduleCoverage.setParent(parent);
 			}
 			moduleCoverage.setName(build.getName());
@@ -190,61 +187,88 @@ public class BuildController {
 					coverages.add(methodCoverage);
 				}
 			}
-			
-			if(build.getModules() != null) {
-				for(Build module: build.getModules()) {
+
+			if (build.getModules() != null) {
+				for (Build module : build.getModules()) {
 					getCoverages(indent + 1, moduleCoverage.getId(), module, coverages);
 				}
 			}
-		}		
+		}
 	}
 
-	private List<Result> getResult(Build build) {
+	private void getResults(Long indent, Long parent, Build build, List<Result> results) {
 
-		List<Result> results = new ArrayList<>();
 		for (TestResult testResult : build.getTestResults()) {
-
 			Result moduleResult = new Result();
-			moduleResult.setId(results.size() + 1);
-			moduleResult.setIndent(0);
-			moduleResult.setParent(null);
+			moduleResult.setId(new Long(results.size()));
+			moduleResult.setIndent(indent);
+			if (parent != null) {
+				moduleResult.setParent(parent);
+			}
 			moduleResult.setName(build.getName());
 			moduleResult.setType(testResult.getTestType());
+			moduleResult.setSuccess(Double.parseDouble(format.format(testResult.getSuccess())));
+			moduleResult.setTotal(testResult.getPass() + testResult.getFail() + testResult.getSkip());
 			moduleResult.setPass(testResult.getPass());
-			moduleResult.setFail(testResult.getFail());
 			moduleResult.setSkip(testResult.getSkip());
-			double total = moduleResult.getPass() + moduleResult.getFail() + moduleResult.getSkip();
-			moduleResult.setSuccess(moduleResult.getPass() / total * 100);
+			moduleResult.setFail(testResult.getFail());
+			moduleResult.setDuration(Long.parseLong(nonDecimalFormat.format(testResult.getDuration())));
 			results.add(moduleResult);
 
 			for (TestSuite testSuite : testResult.getTestSuites()) {
 
 				Result suiteResult = new Result();
-				suiteResult.setId(results.size() + 1);
-				suiteResult.setIndent(0);
-				suiteResult.setParent(null);
+				suiteResult.setId(new Long(results.size()));
+				suiteResult.setIndent(moduleResult.getIndent() + 1);
+				suiteResult.setParent(moduleResult.getId());
 				suiteResult.setName(testSuite.getName());
 				suiteResult.setType(testResult.getTestType());
+				suiteResult.setSuccess(Double.parseDouble(format.format(testSuite.getSuccess())));
+				suiteResult.setTotal(testSuite.getPass() + testSuite.getSkip() + testSuite.getFail());
 				suiteResult.setPass(testSuite.getPass());
-				suiteResult.setFail(testSuite.getFail());
 				suiteResult.setSkip(testSuite.getSkip());
-				total = suiteResult.getPass() + suiteResult.getFail() + suiteResult.getSkip();
-				suiteResult.setSuccess(suiteResult.getPass() / total * 100);
+				suiteResult.setFail(testSuite.getFail());
+				suiteResult.setDuration(Long.parseLong(nonDecimalFormat.format(testSuite.getDuration())));
 				results.add(suiteResult);
 
 				for (TestCase testCase : testSuite.getTestCases()) {
-					Result methodResult = new Result();
-					methodResult.setId(results.size() + 1);
-					methodResult.setIndent(0);
-					methodResult.setParent(null);
-					methodResult.setName(testCase.getName());
-					methodResult.setType(testResult.getTestType());
-					results.add(methodResult);
+
+					Result testCaseResult = new Result();
+					testCaseResult.setId(new Long(results.size()));
+					testCaseResult.setIndent(suiteResult.getIndent() + 1);
+					testCaseResult.setParent(suiteResult.getId());
+					testCaseResult.setName(testCase.getName());
+					testCaseResult.setType(testResult.getTestType());
+					testCaseResult.setDuration(Long.parseLong(nonDecimalFormat.format(testCase.getDuration())));
+					testCaseResult.setStatus(testCase.getStatus());
+					
+					ResultDetail detail = new ResultDetail();
+					for(org.kits.trax.domain.Input input : testCase.getInputs()) {
+						Input aInput = new Input();
+						aInput.setName(input.getName());
+						aInput.setValue(input.getValue());
+						detail.getInputs().add(aInput);
+					}
+					
+					for(org.kits.trax.domain.Output output : testCase.getOutputs()) {
+						Output aOutput = new Output();
+						aOutput.setName(output.getName());
+						aOutput.setActual(output.getActual());
+						aOutput.setExpected(output.getExpected());
+						aOutput.setMatch(output.isPass());
+						detail.getOutputs().add(aOutput);
+					}
+					testCaseResult.setDetail(detail);
+					results.add(testCaseResult);
+				}
+			}
+
+			if (build.getModules() != null) {
+				for (Build module : build.getModules()) {
+					getResults(indent + 1, moduleResult.getId(), module, results);
 				}
 			}
 		}
-
-		return results;
 	}
 
 	@RequestMapping(value = "/build/{id}/delete", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -266,23 +290,24 @@ public class BuildController {
 		return response;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/app/{name}/coverage/trend", method = RequestMethod.GET, headers = "Accept=application/json")
 	public ResponseEntity<String> coverageTrend(@PathVariable("name") String name) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-		List<Build> builds = buildService.listCoverages(name);
+		List<Build> builds = buildService.listTrend(name);
 		List coverages = new ArrayList<>();
 		List unitCoverages = new ArrayList<>();
 		List integrationCoverages = new ArrayList<>();
 		coverages.add(unitCoverages);
 		coverages.add(integrationCoverages);
-		for(Build build : builds) {
-			for(TestCoverage testCoverage : build.getTestCoverages()) {
-				if(testCoverage.getTestType().equalsIgnoreCase("Unit")) {
+		for (Build build : builds) {
+			for (TestCoverage testCoverage : build.getTestCoverages()) {
+				if (testCoverage.getTestType().equalsIgnoreCase("Unit")) {
 					unitCoverages.add(testCoverage.getCoverage());
-				} else if(testCoverage.getTestType().equalsIgnoreCase("Integration")) {
+				} else if (testCoverage.getTestType().equalsIgnoreCase("Integration")) {
 					integrationCoverages.add(testCoverage.getCoverage());
 				}
 			}
@@ -292,14 +317,29 @@ public class BuildController {
 		return response;
 	}
 
-	@RequestMapping(value = "/build/{id}/result/summary", method = RequestMethod.POST, headers = "Accept=application/json")
-	public ResponseEntity<String> resultSummary(@PathVariable("id") Long id) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/app/{name}/result/trend", method = RequestMethod.GET, headers = "Accept=application/json")
+	public ResponseEntity<String> resultTrend(@PathVariable("name") String name) {
 
 		ResponseEntity<String> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-		Build build = buildService.findBuild(id);
-		String jsonData = JsonUtil.toJsonArray(build.getTestResults());
+		List<Build> builds = buildService.listTrend(name);
+		List results = new ArrayList<>();
+		List unitResults = new ArrayList<>();
+		List integrationResults = new ArrayList<>();
+		results.add(unitResults);
+		results.add(integrationResults);
+		for (Build build : builds) {
+			for (TestResult testResult : build.getTestResults()) {
+				if (testResult.getTestType().equalsIgnoreCase("Unit")) {
+					unitResults.add(testResult.getSuccess());
+				} else if (testResult.getTestType().equalsIgnoreCase("Integration")) {
+					integrationResults.add(testResult.getSuccess());
+				}
+			}
+		}
+		String jsonData = JsonUtil.toJsonArray(results);
 		response = new ResponseEntity<String>(jsonData, headers, HttpStatus.OK);
 		return response;
 	}
